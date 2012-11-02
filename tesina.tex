@@ -1,0 +1,67 @@
+\documentclass[12pt,twoside]{tesis}
+% Formato Latex para Tesis de Doctorado Universidad Nacional del Sur, (c) 2000 Alejandro J. García
+% Solamente se sabe lo que significa escribir una tesis, cuando se ha terminado de escribir una.
+% Espero que estos archivos sean de utilidad y ahorren bastante tiempo al que lo use. Ale.
+
+\usepackage{a4}
+\usepackage{t_encab}
+\usepackage{latexsym}
+\usepackage{amsthm}
+\usepackage{epstopdf}
+\usepackage{enumerate}
+\usepackage{tikz}
+\usepackage[spanish]{babel}
+\usepackage[latin1]{inputenc}
+\selectlanguage{spanish}
+
+% Definicion de los encabezamientos de t_encab.sty
+\pagestyle{fancyplain}
+\lhead[\fancyplain{}{\normalsize\thepage}]
+{\fancyplain{}{\normalsize\rightmark}}
+\rhead[\fancyplain{}{\normalsize\leftmark}]
+{\fancyplain{}{\normalsize\thepage}}
+\chead{}\lfoot{}\rfoot{}\cfoot{}
+
+\newcommand{\clearemptydoublepage}{\newpage\thispagestyle{empty}\cleardoublepage}
+
+\input{commands}
+
+\begin{document}
+
+\pagestyle{empty}
+
+\input{titulo}   
+\clearemptydoublepage
+
+\input{prefacio} 
+\clearemptydoublepage
+
+\input{agradecimientos} 
+\clearemptydoublepage
+
+\pagenumbering{roman} 
+\setcounter{page}{1}
+
+\tableofcontents 
+\clearemptydoublepage
+
+\pagestyle{fancyplain}
+\pagenumbering{arabic} 
+\setcounter{page}{1}
+
+\input{introduccion} 
+\clearemptydoublepage
+
+\input{definiciones} 
+\clearemptydoublepage
+
+\input{arquitectura} 
+\clearemptydoublepage
+
+\input{bibliografia} 
+\clearemptydoublepage
+
+\bibliographystyle{thesis} % archivo Thesis.bst creado por Alejandro Stankevicius (UNS)
+\bibliography{tesina}      % indica de donde sacar la información para crear doc.bbl
+
+\end{document}
