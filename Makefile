@@ -1,7 +1,6 @@
 all:
-	latex tesina.tex
-	dvipdf tesina.pdf
+	latex -output-directory=output tesina.tex
+	dvipdf ./output/tesina.dvi ./output/tesina.pdf
 
 clean:
-	rm -f tesina.aux tesina.idx tesina.log tesina.toc
-	rm -f tesina.dvi tesina.pdf
+	rm -f output/* 
