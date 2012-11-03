@@ -3,6 +3,7 @@ grad-thesis
 
 My Graduate Thesis.
 
+<!--
 Doc.aux         = generado automaticamente por LaTeX aux file
 Doc.bbl         = bibliografía generada al ejecutar bibTeX
 doc.bib         = base de datos bibliográfica
@@ -17,3 +18,4 @@ t_encabl.sty    = stilos para encabezados de página
 doc.tex         = archivo principal de la tesis
 titulo.tex      = archivo con la tapa con el formato de la UNS
 doc.toc         = generado por LaTeX = tabla de contenidos
+-->
