@@ -1,4 +1,5 @@
 \chapter{Arquitectura general del agente}
+\label{chap:arquitectura}
 
 Este capítulo tiene el objetivo de analizar el diseño y estructura que
 presenta el  enfoque de agente propuesto. Primero desde un punto de
@@ -10,6 +11,7 @@ principales  adaptaciones y agregados realizados en esta
 implementación particular.
 
 \section{Diseño general}
+\label{sec:diseno_general}
 
 %\label{sec:diseñoGeneral}
 
@@ -25,6 +27,7 @@ decisiones. La forma en que se estructuran los componentes principales
 es detallada a  continuación.
 
 \subsection{Estructura básica del agente}
+\label{sec:estructura_basica_de_agente}
 
 %\label{sec:estructuraBasica}
 
@@ -71,15 +74,14 @@ datos. Esta información es incorporada a la  base de conocimientos,
 estableciendo nuevas creencias para el agente.
 
 El módulo de toma de decisiones, analizado en la sección
-\ref{sec:arquitecturaBDI}, es el  que implementa el modelo BDI
+\ref{sec:arquitectura_bdi}, es el  que implementa el modelo BDI
 respetado por el agente. Este módulo es consultado en cada  iteración
 para obtener la próxima acción a ser ejecutada. Una vez que el flujo
 de control  retorna al programa principal, la acción seleccionada es
 enviada al servidor del juego.
 
 \subsection{Base de conocimiento}
-
-%\label{sec:baseConocimiento}
+\label{sec:base_de_conocimiento}
 
 Como fue mencionado, la percepción del agente en cada iteración es
 convertida a una  estructura de datos que permite, de manera más
@@ -99,9 +101,6 @@ muchos casos, esta clase de términos incluyen un parámetro ligado al
 número de turno en el cual el dato fue percibido. De esta forma, es
 posible realizar ciertos análisis,  como por ejemplo, considerar
 obsoleta la información de una determinada antigüedad.
-
-% En castellano para mantener el idioma y porque las b() 
-% están así.
 
 \begin{verbatim}    
     k(equipoAgente(Agente, Equipo)).
@@ -163,9 +162,7 @@ argumento.
 \end{verbatim}
 
 \section{Arquitectura BDI} 
-%CAMBIAR: Toma de decisiones?
-
-\label{sec:arquitecturaBDI}
+\label{sec:arquitectura_bdi}
 
 El módulo de toma de decisiones es consultado por el programa
 principal, obtiene la  próxima acción a ser ejecutada, y la retorna
@@ -192,8 +189,7 @@ las líneas contínuas representan el flujo de datos.}
 \end{figure}
 
 \subsection{Seteo de creencias}
-
-\label{sec:seteoCreencias}
+\label{sec:seteo_de_creencias}
 
 El seteo de creencias es llevado a cabo cada vez que el agente se
 dispone a  seleccionar una nueva intención. Incluye la generación de
@@ -208,6 +204,7 @@ estar relacionadas a distintos factores, como el rol del agente,  su
 estado, o los deseos en análisis.
 
 \subsubsection{Creencias generales}
+\label{sec:creencias_generales}
 
 Existe un conjunto de creencias que resultan de utilidad general para
 todo el proceso  de decisión. Por esta razón, son las primeras en ser
@@ -221,6 +218,7 @@ de conflictos), y la seguridad que brindan las distintas ubicaciones
 posibles en  cuanto a la presencia de agentes saboteadores enemigos.
 
 \subsubsection{Deseos}
+\label{sec:deseos}
 
 Como se detallará en la sección siguiente, el proceso de toma de
 decisión conlleva el  pesaje de todos los posibles deseos del agente,
@@ -242,6 +240,7 @@ seteados en la base de conocimiento.
 \end{verbatim}
 
 \subsubsection{Creencias específicas} 
+\label{sec:creencias_especificas}
 % Seteo de beliefs para cada deseo.
 
 Junto con los deseos a ser evaluados, es necesario incluir en la base
@@ -262,6 +261,7 @@ se ha decidido una intención,  pueda ser realizada en forma simple e
 directa.
 
 \subsubsection{Creencias especiales} 
+\label{sec:creencias_especiales}
 % Seteo de beliefs en caso de agente deshabilitado.
 
 Cuando el agente se encuentra en una situación de peligro, esto es, no
@@ -278,7 +278,6 @@ considerable), y las distintas alternativas de defensa  propia que
 pueden llevar al agente a superar el peligro.
 
 \subsection{Argumentación}
-
 \label{sec:argumentacion}
 
 Una vez finalizado el seteo de creencias, el agente procede a la
@@ -297,8 +296,7 @@ empleando \textit{argumentación}  en un módulo especial, implementado
 con la ayuda de \textit{DeLP}.
 
 \subsection{Planificación}
-
-%\label{sec:planificacion}
+\label{sec:planificacion}
 
 La planificación consiste en obtener la secuencia de acciones que
 llevan al cumplimiento  de la intención propuesta. Esta lista está
@@ -323,7 +321,6 @@ que el agente se dispone a permanecer inactivo,  la acción nula
 energía, si es que  esta resulta más productiva.
 
 \subsection{Ejecución}
-
 \label{sec:ejecucion}
 
 Dado que el plan se encuentra almacenado de manera completa y
@@ -334,8 +331,7 @@ posteriormente  de enviarla al entorno, para que se convierta
 finalmente en la siguiente acción realizada  por el agente.
 
 \subsection{Condición de corte}
-
-\label{sec:condicionDeCorte}
+\label{sec:condicion_de_corte}
 
 Existen situaciones en las que el paso de los turnos genera que el
 cumplimiento de una  meta se vuelva inalcanzable, innecesario,
@@ -367,8 +363,7 @@ inicio del plan.
 \end{itemize}
 
 \subsection{Re-planificación}
-
-%\label{sec:replanificación}
+\label{sec:replanificacion}
 
 La fase de re-planificación consiste en elaborar nuevamente el plan
 que permite alcanzar  la meta propuesta, sin modificar dicha meta.
@@ -390,6 +385,7 @@ Así, los agentes son capaces de cumplir sus  metas con mayor
 facilidad, o abortarlas si es necesario.
 
 \subsection{Coordinación}
+\label{sec:coordinacion}
 
 En esta tesis proponemos agregar una última fase a la arquitectura de
 los agentes; el propósito de ésta es introducir, primero, una nueva

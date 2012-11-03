@@ -1,4 +1,5 @@
 \section{Programación Lógica Rebatible}
+\label{sec:programacion_logica_rebatible}
 
 %\subsubsection{Representación de conocimiento}
 
@@ -10,6 +11,7 @@ el lector posee un conocimiento básico acerca de los aspectos
 fundamentales de la programación lógica.
 
 \begin{definicion}(Programa \DLP\ \PP)
+\label{def:programa_delp}
 
 Un programa lógico rebatible (delp) es un conjunto \PP\ = \SD\ donde
 \SSet\ y \DD\ representan conjuntos de conocimiento \textit{estricto}
@@ -47,6 +49,7 @@ conjunto de todos los nombres de predicados definidos en un programa
 \DLP\ \PP.
 
 \subsection{Argumento, Contraargumento y Derrota}
+\label{sec:argumento_contraargumento_derrota}
 
 Dado un programa \DLP\ \PP\ = \SD\, resolver consultas resulta en la
 construcción de \textit{argumentos}. Un argumento \ArgA\ es un
@@ -56,6 +59,7 @@ satisfaciendo los requerimientos adicionales de  \textit{no-
 contradicción} y \textit{minimalidad}. Formalmente:
 
 \begin{definicion}[Argumento]
+\label{def:argumento}
 
 Dado un programa \DLP\ \PP, un argumento \ArgA\ para una consulta
 \ArgQ, notado \AQ\, es un subconjunto de  instancias fijas de las
@@ -97,6 +101,7 @@ relacionadas a la noción de contraargumento, como se muestra a
 continuación.
 
 \begin{definicion}[\textbf{Contraargumento}]
+\label{def:contraargumento}
 
 Un argumento \AaQa\ es un \textit{contraargumento} para un argumento
 \AbQb\ si y sólo si
@@ -129,6 +134,7 @@ distinguir entre  dos tipos de derrotadores, \textit{propios} y
 \textit{por bloqueo}.
 
 \begin{definicion}[\textbf{Derrotadores propios y por bloqueo}]
+\label{def:derrotadores}
 
 Un argumento \AaQa\ es un \textit{derrotador propio} para un argumento
 \AbQb\ si \AaQa\ contra-argumenta \AbQb\ con un sub-argumento en
@@ -176,6 +182,7 @@ por falla. El segundo criterio fue el aplicado en el desarrollo del
 sistema que se presenta en los capítulos siguientes.
 
 \subsection{Cómputo de garantías a través de análisis dialéctico}
+\label{sec:computo_garantias}
 
 Dado un argumento \AQ, pueden existir diferentes derrotadores $\BaQa$
 $\ldots$ $\BkQk$, k $\ge$ 0 para \AQ. Si el argumento \AQ\ es
@@ -202,8 +209,6 @@ que las líneas argumentativas aceptables  son finitas. Un tratamiento
 exhaustivo sobre restricciones de aceptabilidad pueden ser encontradas
 en el trabajo de García y Simari\cite{delp04}.
 
-%REF
-
 Dado un programa \DLP\ \PP\ y un argumento inicial \AoQo, el conjunto
 de todas las líneas argumentativas aceptables comenzando en \AoQo\ da
 lugar a un análisis dialéctico completo para \AoQo\ (\ie, todos los
@@ -221,8 +226,6 @@ nodo U como hijo, y como nodo U en otro caso.  Un argumento \AoQo\ es
 finalmente aceptado como válido (o \textit{garantizado}) con respecto
 a un programa  \DLP\ \PP\  si y sólo si la raíz del árbol dialéctico
 asociado $T_{\scriptsize \AoQo}$ está etiquetado como \textit{nodo U}.
-
-%Superíndice
 
 Dado un programa \DLP\ \PP, resolver una consulta \ArgQ\ con respecto
 a \PP\ implica determinar si \ArgQ\ está soportado por (al menos) un
