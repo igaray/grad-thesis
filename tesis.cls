@@ -1,5 +1,6 @@
 
-%  Tesis.cls es report.cls con algunos cambios ver %OJO
+% Tesis.cls es report.cls con algunos cambios ver 
+% OJO
 \typeout{ - - - - - - - - - - - - - - - - - - }
 \typeout{Tesis.cls is a modified version of `report.cls' by Alejandro J. Garcia (4/2000) http://cs.uns.edu.ar}
 \typeout{ - - - - - - - - - - - - - - - - - - }
