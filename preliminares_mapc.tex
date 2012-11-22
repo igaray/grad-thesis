@@ -3,55 +3,55 @@
 
 
 El \textit{Multi-Agent Programming Contest} es un concurso de
-programación de Inteligencia Artificial iniciado en el año 2005 con el
-objetivo de estimular la investigación en el área de desarrollo y
-programación de Sistemas Multi-Agente.
+programaciÃ³n de Inteligencia Artificial iniciado en el aÃ±o 2005 con el
+objetivo de estimular la investigaciÃ³n en el Ã¡rea de desarrollo y
+programaciÃ³n de Sistemas Multi-Agente.
 Para ello, la competencia propone diferentes escenarios de juego de
 manera anual, que obligan a los participantes tanto a identificar y
 resolver problemas clave, como a explorar lenguajes, plataformas y
-herramientas de programación para Sistemas Multi-Agente.
+herramientas de programaciÃ³n para Sistemas Multi-Agente.
 
 
 \subsection{Escenario MAPC 2011}
 \label{sec:escenario_mapc}
 
 
-El escenario del año 2011 está formado por el mapa de un planeta
+El escenario del aÃ±o 2011 estÃ¡ formado por el mapa de un planeta
 representado mediante un grafo.
-Cada nodo del grafo es una locación válida (y tiene un valor
-determinado), y existen arcos (con diferente costo de energía) que
-permiten a un agente desplazarse de una locación a otra.
+Cada nodo del grafo es una locaciÃ³n vÃ¡lida (y tiene un valor
+determinado), y existen arcos (con diferente costo de energÃ­a) que
+permiten a un agente desplazarse de una locaciÃ³n a otra.
 
 
-En cada ronda de la competición participan dos equipos rivales.
+En cada ronda de la competiciÃ³n participan dos equipos rivales.
 Cada equipo posee un conjunto de agentes con diferentes roles
 preestablecidos (\textit{Explorador}, \textit{Saboteador},
 \textit{Reparador}, \textit{Sentinela} e \textit{Inspector}).
 El rol de cada agente define tanto el conjunto de acciones que puede
-realizar, como sus características físicas (\textit{Energía},
-\textit{Salud}, \textit{Fuerza} y \textit{Rango de Visión}).
+realizar, como sus caracterÃ­sticas fÃ­sicas (\textit{EnergÃ­a},
+\textit{Salud}, \textit{Fuerza} y \textit{Rango de VisiÃ³n}).
 
 
 \subsubsection{Puntaje}
 \label{sec:puntaje}
 
 
-La simulación del juego se desarrolla por pasos, y en cada paso se
-otorga a los equipos una determinada cantidad de puntos según el
-estado de la simulación.
+La simulaciÃ³n del juego se desarrolla por pasos, y en cada paso se
+otorga a los equipos una determinada cantidad de puntos segÃºn el
+estado de la simulaciÃ³n.
 El objetivo del juego es obtener la mayor cantidad de puntos posibles
-cuando la simulación termina.
+cuando la simulaciÃ³n termina.
 
 
 Para obtener puntos, los agentes de cada uno de los equipos deben
 lograr formar \textit{"`zonas"'} en el mapa logrando posicionarse en
-diferentes locaciones de manera estratégica. 
+diferentes locaciones de manera estratÃ©gica. 
 
 La predominancia de un
 equipo sobre el otro en los nodos es determinada por un algoritmo bien
 definido para la competencia, y el valor de todos los nodos dominados
 por un equipo es el principal factor del puntaje otorgado en cada uno
-de los pasos de la simulación. 
+de los pasos de la simulaciÃ³n. 
 
 Algunas otras situaciones, como el
 logro de determinados \textit{achievements}, pueden otorgar puntos
@@ -62,91 +62,91 @@ adicionales y dinero al equipo.
 \label{sec:acciones}
 
 
-Todos los agentes tienen acciones en común que pueden realizar en cada
-uno de los pasos de la simulación:
+Todos los agentes tienen acciones en comÃºn que pueden realizar en cada
+uno de los pasos de la simulaciÃ³n:
 
 \begin{itemize}
 
 \item goto(X): el agente se desplaza hacia el nodo X, siempre y cuando
 exista un arco que conecte el nodo actual del agente con X, y dicho
-arco tenga un costo menor a la energía actual del agente.
+arco tenga un costo menor a la energÃ­a actual del agente.
 
-\item survey(X): el agente recibe en su próxima percepción los costos
+\item survey(X): el agente recibe en su prÃ³xima percepciÃ³n los costos
 de todos los arcos conectados al nodo en el que se encuentra
 actualmente.
 
 \item buy(X): el agente utiliza el dinero obtenido a partir de los
-\textit{achievements} para aumentar el valor máximo de cualquiera de
-sus características físicas (Energía, Salud, Fuerza o Rango de visión)
+\textit{achievements} para aumentar el valor mÃ¡ximo de cualquiera de
+sus caracterÃ­sticas fÃ­sicas (EnergÃ­a, Salud, Fuerza o Rango de visiÃ³n)
 en 1 punto.
 
-\item recharge: el agente recupera el 20\% de su energía máxima.
+\item recharge: el agente recupera el 20\% de su energÃ­a mÃ¡xima.
 
-\item skip: el agente pasa al turno siguiente sin realizar ningún tipo
-de acción.
+\item skip: el agente pasa al turno siguiente sin realizar ningÃºn tipo
+de acciÃ³n.
 
 \end{itemize}
 
-Además, según el rol de cada agente, existen algunas acciones
-específicas que pueden realizar:
+AdemÃ¡s, segÃºn el rol de cada agente, existen algunas acciones
+especÃ­ficas que pueden realizar:
 
 \begin{itemize}
 
-\item attack(X): acción disponible únicamente para los
+\item attack(X): acciÃ³n disponible Ãºnicamente para los
 \textit{Saboteadores}; el agente ataca a un enemigo X, si dicho
 enemigo se encuentra en el mismo nodo.
-El ataque, de tener éxito, decrementa la energía del agente enemigo,
-pudiendo deshabilitarlo en caso de que ésta llegue a 0.
+El ataque, de tener Ã©xito, decrementa la energÃ­a del agente enemigo,
+pudiendo deshabilitarlo en caso de que Ã©sta llegue a 0.
 
-\item parry: acción disponible únicamente para los
+\item parry: acciÃ³n disponible Ãºnicamente para los
 \textit{Reparadores}, textit{Saboteadores} y textit{Sentinelas}.
-La acción protege al agente de los ataques enemigos, impidiendo que
-éstos tengan éxito.
+La acciÃ³n protege al agente de los ataques enemigos, impidiendo que
+Ã©stos tengan Ã©xito.
 
-\item probe: acción disponible únicamente para los
+\item probe: acciÃ³n disponible Ãºnicamente para los
 \textit{Exploradores}.
-El agente recibe en su próxima percepción el valor del nodo en el que
+El agente recibe en su prÃ³xima percepciÃ³n el valor del nodo en el que
 se encuentra actualmente.
-Ésta acción no sólo resulta importante por conocer el valor del nodo,
-sino que además permite que, cuando el nodo es conquistado por el
+Ã‰sta acciÃ³n no sÃ³lo resulta importante por conocer el valor del nodo,
+sino que ademÃ¡s permite que, cuando el nodo es conquistado por el
 equipo, dicho valor se sume al total de puntos de la zona.
-Un nodo en el que no se realizó \textit{probe} suma únicamente 1 punto
+Un nodo en el que no se realizÃ³ \textit{probe} suma Ãºnicamente 1 punto
 al valor total de la zona.
 
-\item inspect: acción disponible únicamente para los
+\item inspect: acciÃ³n disponible Ãºnicamente para los
 \textit{Inspectores}.
-El inspector recibe en su próxima percepción la información física
-(Salud, Energía, Fuerza, Rango de visión) de todos los agentes
-enemigos que se encuentren en el mismo nodo que él, o en cualquier
+El inspector recibe en su prÃ³xima percepciÃ³n la informaciÃ³n fÃ­sica
+(Salud, EnergÃ­a, Fuerza, Rango de visiÃ³n) de todos los agentes
+enemigos que se encuentren en el mismo nodo que Ã©l, o en cualquier
 vecino directo.
 
-\item repair(X): acción disponible únicamente para los
+\item repair(X): acciÃ³n disponible Ãºnicamente para los
 \textit{Reparadores}.
-El reparador aumenta el valor de la Salud actual de su compañero de
+El reparador aumenta el valor de la Salud actual de su compaÃ±ero de
 equipo X (volviendo a habilitarlo, en caso de que su Salud fuera 0).
 
 \end{itemize}
 
 
-\subsubsection{Toma de decisiones y motivación para la resolución de
+\subsubsection{Toma de decisiones y motivaciÃ³n para la resoluciÃ³n de
 conflictos} \label{sec:toma_de_decisiones}
 
 
-Dado que cada agente decide por separado qué acción tomar, muchas
-veces ocurre que dos (o más) de los agentes del mismo equipo realizan
+Dado que cada agente decide por separado quÃ© acciÃ³n tomar, muchas
+veces ocurre que dos (o mÃ¡s) de los agentes del mismo equipo realizan
 acciones que resultan redundantes, peligrosas, y en el peor de los
 casos, perjudiciales al combinarse.
 Como mencionamos en el ejemplo introductorio de la tesis, en el caso
-de que dos agentes realicen una acción idéntica a la vez, existe la
-posibilidad de que dicha planificación represente un malgasto de
+de que dos agentes realicen una acciÃ³n idÃ©ntica a la vez, existe la
+posibilidad de que dicha planificaciÃ³n represente un malgasto de
 tiempo o recursos para los agentes; en el marco de MAPC 2011, esto
 ocurre, por ejemplo, cuando dos agentes cualesquiera tienen como
-intención \textit{survey($X_{i}$)}, cuando dos exploradores tienen
-como intención \textit{probear($X_{i}$)}, o cuando dos inspectores
-tienen como intención \textit{inspect} estando en el mismo nodo.
+intenciÃ³n \textit{survey($X_{i}$)}, cuando dos exploradores tienen
+como intenciÃ³n \textit{probear($X_{i}$)}, o cuando dos inspectores
+tienen como intenciÃ³n \textit{inspect} estando en el mismo nodo.
 
-Si bien por limitaciones temporales durante la competencia únicamente
-se realizaron coordinaciones implícitas en las acciones de los
-agentes, es naturalmente posible mejorar dicha coordinación para sacar
-mayor rédito de las acciones, y ésta es la principal motivación de
+Si bien por limitaciones temporales durante la competencia Ãºnicamente
+se realizaron coordinaciones implÃ­citas en las acciones de los
+agentes, es naturalmente posible mejorar dicha coordinaciÃ³n para sacar
+mayor rÃ©dito de las acciones, y Ã©sta es la principal motivaciÃ³n de
 este trabajo.

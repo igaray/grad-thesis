@@ -1,394 +1,280 @@
 \chapter{Arquitectura general del agente}
 \label{chap:arquitectura}
 
-
-Este capÌtulo tiene el objetivo de analizar el diseÒo y estructura que
-presenta el  enfoque de agente propuesto.
-Primero desde un punto de vista general, para luego  poner especial
-Ènfasis en el mÛdulo dedicado a la toma de decisiones, responsable
+Este cap√≠tulo tiene el objetivo de analizar el dise√±o y estructura que
+presenta el enfoque de agente propuesto.
+Primero desde un punto de vista general, para luego poner especial
+√©nfasis en el m√≥dulo dedicado a la toma de decisiones, responsable
 del manejo de las creencias, deseos e intenciones.
-Ser·n presentados en detalle los componentes b·sicos del esquema BDI
-aplicado, asÌ como tambiÈn las principales  adaptaciones y agregados
-realizados en esta implementaciÛn particular.
+Ser√°n presentados en detalle los componentes b√°sicos del esquema BDI
+aplicado, as√≠ como tambi√©n las principales adaptaciones y agregados
+realizados en esta implementaci√≥n particular.
 
-
-\section{DiseÒo general}
+\section{Dise√±o general}
 \label{sec:diseno_general}
 
-%\label{sec:diseÒoGeneral}
-
-
 El programa agente presenta una estructura simple en cuanto a su
-divisiÛn m·s general.
+divisi√≥n m√°s general.
 Esto permite su entendimiento a nivel individual, al mismo tiempo que
-facilita su  integraciÛn en un entorno multi-agente como el
+facilita su integraci√≥n en un entorno multi-agente como el
 enfrentado.
-La interacciÛn con el entorno  y el procesamiento inicial de la
-informaciÛn recibida finalizan con la generaciÛn de una  serie de
+La interacci√≥n con el entorno y el procesamiento inicial de la
+informaci√≥n recibida finalizan con la generaci√≥n de una serie de
 creencias que son incorporadas a la base de conocimiento mantenida por
 el agente.
-Este conjunto de creencias es empleado posteriormente por el mÛdulo
+Este conjunto de creencias es empleado posteriormente por el m√≥dulo
 encargado de tomar decisiones.
 La forma en que se estructuran los componentes principales es
-detallada a  continuaciÛn.
+detallada a continuaci√≥n.
 
-
-\subsection{Estructura b·sica del agente}
+\subsection{Estructura b√°sica del agente}
 \label{sec:estructura_basica_de_agente}
 
-%\label{sec:estructuraBasica}
-
-
-
 El programa principal del agente es el encargado de manejar la
-comunicaciÛn con los  servidores, tanto el del juego como el de
-percepciones (presentado  a continuaciÛn). 
-
-TambiÈn es responsable de
-parsear y procesar la informaciÛn contenida  en la percepciÛn para
-darle el formato interpretado por la base de conocimientos, y  enviar
-la acciÛn que ha sido elegida por el mÛdulo de toma de decisiones.
-
-
+comunicaci√≥n con los servidores, tanto el del juego como el de
+percepciones (presentado a continuaci√≥n).
+Tambi√©n es responsable de parsear y procesar la informaci√≥n contenida
+en la percepci√≥n para darle el formato interpretado por la base de
+conocimientos, y enviar la acci√≥n que ha sido elegida por el m√≥dulo
+de toma de decisiones.
 
 \begin{figure}
 \centering
 \includegraphics[scale=.4]{graficos/eps/agent_architecture.eps}
-\caption{Diagrama de la arquitectura del agente. Las lÌneas punteadas
-representan el flujo de control, y las lÌneas contÌnuas representan el
+\caption{Diagrama de la arquitectura del agente. Las l√≠neas punteadas
+representan el flujo de control, y las l√≠neas cont√≠nuas representan el
 flujo de datos.}
 \label{fig:architecture}
 \end{figure}
 
-
-
 El servidor de percepciones (SP) es un programa independiente,
-encargado de unificar las  percepciones de todos los agentes que se
-encuentran en ejecuciÛn. 
+encargado de unificar las percepciones de todos los agentes que se
+encuentran en ejecuci√≥n.
+Recibe sus percepciones individuales y retorna a cada uno de ellos el
+conjunto de datos que a√∫n no poseen, de manera que todos los agentes
+del equipo cuenten con la misma informaci√≥n en cuanto al estado del
+escenario.
 
-Recibe sus percepciones  individuales y
-retorna a cada uno de ellos el conjunto de datos que a˙n no poseen, de
-manera que todos los agentes del equipo cuenten con la misma
-informaciÛn en cuanto al estado  del escenario.
+En cada iteraci√≥n de la simulaci√≥n, el agente recibe un mensaje por
+parte del servidor del juego, el cual contiene la informaci√≥n
+asociada a la percepci√≥n del turno en disputa.
+Este mensaje es parseado y traducido en una estructura que permite
+manipular los datos con mayor facilidad.
+Los datos son divididos en dos conjuntos, uno ``p√∫blico'', el cual es
+compartido con los dem√°s agentes del equipo, y uno ``privado''.
+La secci√≥n p√∫blica de datos es compartida a trav√©s del mencionado
+servidor de percepciones.
 
-
-
-En cada iteraciÛn de la simulaciÛn, el agente recibe un mensaje por
-parte del servidor  del juego, el cual contiene la informaciÛn
-asociada a la percepciÛn del turno en disputa. 
-
- Este mensaje es
-parseado y traducido en una estructura que permite manipular los datos
-con mayor facilidad. 
-
-Los datos son divididos en dos conjuntos, uno
-``p˙blico'', el cual  es compartido con los dem·s agentes del equipo,
-y uno ``privado''. 
-
-La secciÛn p˙blica de  datos es compartida a travÈs
-del mencionado servidor de percepciones.
-
-
-
-El agente une entonces su propia percepciÛn con la percepciÛn global
-recibida del servidor  de percepciones, y genera un ˙nico conjunto de
-datos. 
-
-Esta informaciÛn es incorporada a la  base de conocimientos,
+El agente une entonces su propia percepci√≥n con la percepci√≥n global
+recibida del servidor de percepciones, y genera un √∫nico conjunto de
+datos.
+Esta informaci√≥n es incorporada a la base de conocimientos,
 estableciendo nuevas creencias para el agente.
 
-
-
-El mÛdulo de toma de decisiones, analizado en la secciÛn
-\ref{sec:arquitectura_bdi}, es el  que implementa el modelo BDI
-respetado por el agente. 
-
-Este mÛdulo es consultado en cada  iteraciÛn
-para obtener la prÛxima acciÛn a ser ejecutada. 
-
-Una vez que el flujo
-de control  retorna al programa principal, la acciÛn seleccionada es
-enviada al servidor del juego.
-
-
+El m√≥dulo de toma de decisiones, analizado en la secci√≥n
+\ref{sec:arquitectura_bdi}, es el que implementa el modelo BDI
+respetado por el agente.
+Este m√≥dulo es consultado en cada iteraci√≥n para obtener la pr√≥xima
+acci√≥n a ser ejecutada.
+Una vez que el flujo de control retorna al programa principal, la
+acci√≥n seleccionada es enviada al servidor del juego.
 
 \subsection{Base de conocimiento}
 \label{sec:base_de_conocimiento}
 
+Como fue mencionado, la percepci√≥n del agente en cada iteraci√≥n es
+convertida a una estructura de datos que permite, de manera m√°s
+sencilla, manipular y compartir la informaci√≥n.
+Cuando el agente cuenta con todos los datos relativos a las
+percepciones del equipo, la base de conocimiento puede ser
+actualizada convenientemente.
+Una colecci√≥n de predicados de Prolog consultados desde el programa
+principal se encarga de verificar que la informaci√≥n existente no
+resulte sobreescrita, y que informaci√≥n redundante no sea incorporada.
 
+La informaci√≥n que constituye conocimiento certero sobre el estado del
+escenario es almacenada mediante t√©rminos, que sirven como par√°metros
+del predicado \texttt{k/1} (\textit{knowledge}).
+Cada uno de los datos de inter√©s es representado mediante un t√©rmino
+diferente.
+En muchos casos, esta clase de t√©rminos incluyen un par√°metro ligado
+al n√∫mero de turno en el cual el dato fue percibido.
+De esta forma, es posible realizar ciertos an√°lisis, como por
+ejemplo, considerar obsoleta la informaci√≥n de una determinada
+antig√ºedad.
 
-Como fue mencionado, la percepciÛn del agente en cada iteraciÛn es
-convertida a una  estructura de datos que permite, de manera m·s
-sencilla, manipular y compartir la  informaciÛn. 
-
-Cuando el agente
-cuenta con todos los datos relativos a las percepciones  del equipo,
-la base de conocimiento puede ser actualizada convenientemente. 
-
-Una
-colecciÛn  de predicados de Prolog consultados desde el programa
-principal se encarga de verificar  que la informaciÛn existente no
-resulte sobreescrita, y que informaciÛn redundante no sea
-incorporada.
-
-
-
-La informaciÛn que constituye conocimiento certero sobre el estado del
-escenario es  almacenada mediante tÈrminos, que sirven como par·metros
-del predicado \texttt{k/1}  (\textit{knowledge}). 
-
-Cada uno de los
-datos de interÈs es representado mediante un  tÈrmino diferente. 
-
- En
-muchos casos, esta clase de tÈrminos incluyen un par·metro ligado al
-n˙mero de turno en el cual el dato fue percibido. 
-
-De esta forma, es
-posible realizar ciertos an·lisis,  como por ejemplo, considerar
-obsoleta la informaciÛn de una determinada antig¸edad.
-
-
-
-\begin{verbatim}    
-    k(equipoAgente(Agente, Equipo)).
-    k(valorNodo(Nodo, Valor)).
-    k(arco(Nodo1, Nodo2, Costo)).
-    k(posicionAgente(Agente, Turno, PosiciÛn)).
-    k(equipoNodo(Turno, Nodo, DueÒo)). 
-
-
+\begin{verbatim}  
+  k(equipoAgente(Agente, Equipo)).
+  k(valorNodo(Nodo, Valor)).
+  k(arco(Nodo1, Nodo2, Costo)).
+  k(posicionAgente(Agente, Turno, Posici√≥n)).
+  k(equipoNodo(Turno, Nodo, Due√±o)). 
 \end{verbatim}
 
-
-
-Las creencias que provienen de inferencias y c·lculos realizados a
-partir de informaciÛn  ya existente tambiÈn son almacenadas mediante
-tÈrminos, en este caso par·metros %argumentos del predicado
+Las creencias que provienen de inferencias y c√°lculos realizados a
+partir de informaci√≥n ya existente tambi√©n son almacenadas mediante
+t√©rminos, en este caso par√°metros %argumentos del predicado
 \texttt{b/1} (\textit{beliefs}). 
 
-Este tipo de creencias es empleado
-directamente  por el mÛdulo encargado de la toma de decisiones, y se
-mantienen vigentes sÛlo durante el  turno en el cual fueron generadas.
-Es decir, que, al finalizar cada turno, son descartadas  para evitar
-futuros problemas o inconcistencias.
-
-
+Este tipo de creencias es empleado directamente por el m√≥dulo
+encargado de la toma de decisiones, y se mantienen vigentes s√≥lo
+durante el turno en el cual fueron generadas. Es decir, que, al
+finalizar cada turno, son descartadas para evitar futuros problemas o
+inconcistencias.
 
 \begin{verbatim}
-    b(estoyEnLaFrontera).
-    b(posibleExplorar(Nodo)).
-    b(haySaboteador(Nodo)).
+  b(estoyEnLaFrontera).
+  b(posibleExplorar(Nodo)).
+  b(haySaboteador(Nodo)).
 \end{verbatim}
 
-
-
-Existe cierta informaciÛn que es formulada de manera hipotÈtica. 
-
-Se
-trata de datos  surgidos de suposiciones realizadas sobre posibles
-estados futuros del escenario, a partir  de su estado actual. 
-
-Este
-tipo de datos resulta fundamental para facilitar los c·lculos
+Existe cierta informaci√≥n que es formulada de manera hipot√©tica.
+Se trata de datos surgidos de suposiciones realizadas sobre posibles
+estados futuros del escenario, a partir de su estado actual.
+Este tipo de datos resulta fundamental para facilitar los c√°lculos
 realizados por los algoritmos que se encargan de buscar formas de
-maximizar el puntaje  del equipo. 
-
-Dado que no constituye informaciÛn
-real, sino posible a futuro, se almacena  mediante par·metros  de un
-predicado especial, \texttt{h/1} (\textit{hypothetical}).
-
-
+maximizar el puntaje del equipo.
+Dado que no constituye informaci√≥n real, sino posible a futuro, se
+almacena mediante par√°metros de un predicado especial, \texttt{h/1}
+(\textit{hypothetical}).
 
 \begin{verbatim}
-    h(nodoEquipo(Nodo, DueÒo)).
-    h(posicion(Turno, Agente, Nodo)). 
+  h(nodoEquipo(Nodo, Due√±o)).
+  h(posicion(Turno, Agente, Nodo)). 
 \end{verbatim}
 
-
-
-Las intenciones surgen del proceso argumentativo explicado m·s
-adelante, y son  representadas utilizando tÈrminos. 
-
-Si la intenciÛn no
-posee argumentos, entonces es  representada mediante un ·tomo. 
-
-En otro
-caso, se emplea un functor que denota el  nombre de la intenciÛn,
-acompaÒado por un argumento. 
-
-Las acciones, por el contrario,  son
-representadas a travÈs de listas. 
-
-El primer elemento de la lista es un
-atÛmo denotando  el tipo de acciÛn. 
-
-El resto de la lista contiene,
-ocasionalmente, un tÈrmino que  indica el argumento de la acciÛn, como
-por ejemplo el nombre de un nodo o un agente. 
-
-Los planes son
-representados mediante listas de acciones, es decir, listas de listas.
-
-
+Las intenciones surgen del proceso argumentativo explicado m√°s
+adelante, y son representadas utilizando t√©rminos.
+Si la intenci√≥n no posee argumentos, entonces es representada mediante
+un √°tomo.
+En otro caso, se emplea un functor que denota el nombre de la
+intenci√≥n, acompa√±ado por un argumento.
+Las acciones, por el contrario, son representadas a trav√©s de listas.
+El primer elemento de la lista es un at√≥mo denotando el tipo de
+acci√≥n.
+El resto de la lista contiene, ocasionalmente, un t√©rmino que indica
+el argumento de la acci√≥n, como por ejemplo el nombre de un nodo o un
+agente.
+Los planes son representados mediante listas de acciones, es decir,
+listas de listas.
 
 Contrario a lo que ocurre con las creencias, tanto las intenciones
-como los planes  constituyen informaciÛn que debe perdurar en la base
-de conocimiento tantos turnos  como sea necesario. 
-
-Para este tipo de
-datos se emplean hechos especÌficos que cuentan  con un ˙nico
-argumento.
-
-
+como los planes constituyen informaci√≥n que debe perdurar en la base
+de conocimiento tantos turnos como sea necesario.
+Para este tipo de datos se emplean hechos espec√≠ficos que cuentan con
+un √∫nico argumento.
 
 \begin{verbatim}
-    intencion(explorar(vertex7)).
-    plan([[recharge], [goto, vertex7], [survey]]).
+  intencion(explorar(vertex7)).
+  plan([[recharge], [goto, vertex7], [survey]]).
 \end{verbatim}
 
 \section{Arquitectura BDI} 
 \label{sec:arquitectura_bdi}
 
-
-
-El mÛdulo de toma de decisiones es consultado por el programa
-principal, obtiene la  prÛxima acciÛn a ser ejecutada, y la retorna
-para que pueda ser enviada. 
-
-Esta es una  secuencia que se reitera en
-cada uno de los turnos de la simulaciÛn, con una caracterÌstica:
-cuando es necesario plantear y planificar una nueva meta, intervienen
-una serie de  componentes especiales, que difieren de aquellos
-involucrados cuando se cuenta con una  meta ya planificada. 
-
-Cada uno
-de estos componentes es descrito en esta secciÛn.
-
-
+El m√≥dulo de toma de decisiones es consultado por el programa
+principal, obtiene la pr√≥xima acci√≥n a ser ejecutada, y la retorna
+para que pueda ser enviada.
+Esta es una secuencia que se reitera en cada uno de los turnos de la
+simulaci√≥n, con una caracter√≠stica: cuando es necesario plantear y
+planificar una nueva meta, intervienen una serie de componentes
+especiales, que difieren de aquellos involucrados cuando se cuenta con
+una meta ya planificada.
+Cada uno de estos componentes es descrito en esta secci√≥n.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=.3]{graficos/eps/agent_prolog.eps}
 \caption{Diagrama de la arquitectura interna del agente,
-particularmente todo lo relacionado  con la toma de decisiones, hecha
+particularmente todo lo relacionado con la toma de decisiones, hecha
 en Prolog.
-Las lÌneas punteadas representan el  flujo de control, y
-las lÌneas contÌnuas representan el flujo de datos.}
+Las l√≠neas punteadas representan el flujo de control, y
+las l√≠neas cont√≠nuas representan el flujo de datos.}
 \label{fig:agent_prolog}
-
 \end{figure}
 
 \subsection{Seteo de creencias}
 \label{sec:seteo_de_creencias}
 
-
-
 El seteo de creencias es llevado a cabo cada vez que el agente se
-dispone a  seleccionar una nueva intenciÛn. 
-
-Incluye la generaciÛn de
-aquellos datos que pueden  permitir al agente realizar una elecciÛn lo
-m·s acertada posible. 
-
-Se trata de  inferencias realizadas en base al
-estado del escenario, es decir, aquella informaciÛn  que, como fue
-mencionado, es almacenada en \texttt{b/1}. 
-
-No forma parte de este
-proceso  la informaciÛn proveniente de la percepciÛn, ya que el estado
-del entorno es actualizado  en cada turno de manera previa. 
-
-Como se
-detalla a continuaciÛn, distintos tipos de  creencias pueden pueden
-estar relacionadas a distintos factores, como el rol del agente,  su
-estado, o los deseos en an·lisis.
-
-
+dispone a seleccionar una nueva intenci√≥n.
+Incluye la generaci√≥n de aquellos datos que pueden permitir al agente
+realizar una elecci√≥n lo m√°s acertada posible.
+Se trata de inferencias realizadas en base al estado del escenario, es
+decir, aquella informaci√≥n que, como fue mencionado, es almacenada en
+\texttt{b/1}.
+No forma parte de este proceso la informaci√≥n proveniente de la
+percepci√≥n, ya que el estado del entorno es actualizado en cada turno
+de manera previa.
+Como se detalla a continuaci√≥n, distintos tipos de creencias pueden
+pueden estar relacionadas a distintos factores, como el rol del
+agente, su estado, o los deseos en an√°lisis.
 
 \subsubsection{Creencias generales}
 \label{sec:creencias_generales}
 
-
-
 Existe un conjunto de creencias que resultan de utilidad general para
-todo el proceso  de decisiÛn. 
-
-Por esta razÛn, son las primeras en ser
-calculadas y almacenadas durante  el seteo de creencias. 
-
-Entre los
-datos incluidos, se encuentra el puntaje que est·n  aportando las
-zonas armadas, la diferencia de puntos que puede producirse si el
-agente  abandona su posiciÛn (ambos puntajes calculados utilizando una
-versiÛn propia y optimizada del \textit{algoritmo de coloreo} de la
-competencia, que a su vez ser· reutilizado en la etapa de resoluciÛn
+todo el proceso de decisi√≥n.
+Por esta raz√≥n, son las primeras en ser calculadas y almacenadas
+durante el seteo de creencias.
+Entre los datos incluidos, se encuentra el puntaje que est√°n aportando
+las zonas armadas, la diferencia de puntos que puede producirse si el
+agente abandona su posici√≥n (ambos puntajes calculados utilizando una
+versi√≥n propia y optimizada del \textit{algoritmo de coloreo} de la
+competencia, que a su vez ser√° reutilizado en la etapa de resoluci√≥n
 de conflictos), y la seguridad que brindan las distintas ubicaciones
-posibles en  cuanto a la presencia de agentes saboteadores enemigos.
-
-
+posibles en cuanto a la presencia de agentes saboteadores enemigos.
 
 \subsubsection{Deseos}
 \label{sec:deseos}
 
-
-
-Como se detallar· en la secciÛn siguiente, el proceso de toma de
-decisiÛn conlleva el  pesaje de todos los posibles deseos del agente,
-y la posterior selecciÛn del m·s beneficioso. 
-
- Dichos deseos surgen de
-un conjunto predefinido, y pueden, seg˙n sea el caso, estar
-instanciados con diferentes entidades del juego, como agentes o nodos.
-Para que esta  selecciÛn sea posible, es necesario determinar, de
-manera previa, quÈ deseos e instanciaciones  son realmente factibles,
-y por lo tanto deben ser tenidos en cuenta, y cuales pueden ser
-descartados anticipadamente. 
-
-Para esto se analizan distintas
-condiciones como, por ejemplo, la distancia a un nodo  que no ha sido
-explorado. 
-
-Si el nodo se encuentra a una distancia que supera una cota
-pre-establecida, entonces el deseo de explorar ese nodo no es
-contemplado. 
-
-Los deseos e instanciaciones considerados factibles son
-seteados en la base de conocimiento.
-
-
+Como se detallar√° en la secci√≥n siguiente, el proceso de toma de
+decisi√≥n conlleva el pesaje de todos los posibles deseos del agente, y
+la posterior selecci√≥n del m√°s beneficioso.
+Dichos deseos surgen de un conjunto predefinido, y pueden, seg√∫n sea
+el caso, estar instanciados con diferentes entidades del juego, como
+agentes o nodos. Para que esta selecci√≥n sea posible, es necesario
+determinar, de manera previa, qu√© deseos e instanciaciones son
+realmente factibles, y por lo tanto deben ser tenidos en cuenta, y
+cuales pueden ser descartados anticipadamente.
+Para esto se analizan distintas condiciones como, por ejemplo, la
+distancia a un nodo que no ha sido explorado.
+Si el nodo se encuentra a una distancia que supera una cota pre-
+establecida, entonces el deseo de explorar ese nodo no es contemplado.
+Los deseos e instanciaciones considerados factibles son seteados en la
+base de conocimiento.
 
 \begin{verbatim}
-    b(posibleExplorar(vertex4)).
+  b(posibleExplorar(vertex4)).
 \end{verbatim}
 
-\subsubsection{Creencias especÌficas} 
+\subsubsection{Creencias espec√≠ficas} 
 \label{sec:creencias_especificas}
 % Seteo de beliefs para cada deseo.
 
 
 
 Junto con los deseos a ser evaluados, es necesario incluir en la base
-de conocimiento  un conjunto de creencias relacionadas a estos deseos.
-Entre las m·s importantes, se  encuentran las distancias que existen
-desde la posiciÛn actual del agente a los distintos  nodos de interÈs,
+de conocimiento un conjunto de creencias relacionadas a estos deseos.
+Entre las m√°s importantes, se encuentran las distancias que existen
+desde la posici√≥n actual del agente a los distintos nodos de inter√©s,
 y la diferencia de puntaje que se produce en caso que el agente se
-desplace  a dichas ubicaciones. 
+desplace a dichas ubicaciones. 
 
 Estos datos resultan fundamentales, ya
-que afectan directamente la  valuaciÛn que se realiza de cada deseo, y
-por lo tanto la posterior selecciÛn.
+que afectan directamente la valuaci√≥n que se realiza de cada deseo, y
+por lo tanto la posterior selecci√≥n.
 
 
 
-En esta etapa, tambiÈn se produce el seteo de datos requeridos
-posteriormente, como son  los caminos a los diferentes nodos
+En esta etapa, tambi√©n se produce el seteo de datos requeridos
+posteriormente, como son los caminos a los diferentes nodos
 analizados. 
 
-Los algoritmos empleados para la b˙squeda  de caminos
+Los algoritmos empleados para la b√∫squeda de caminos
 almacenan todos los caminos hallados, en forma de secuencia de
-acciones, de  manera que la etapa de planificaciÛn, ejecutada cuando
-se ha decidido una intenciÛn,  pueda ser realizada en forma simple e
+acciones, de manera que la etapa de planificaci√≥n, ejecutada cuando
+se ha decidido una intenci√≥n, pueda ser realizada en forma simple e
 directa.
 
 
@@ -399,141 +285,141 @@ directa.
 
 
 
-Cuando el agente se encuentra en una situaciÛn de peligro, esto es, no
-posee el rol de  saboteador y hay un saboteador enemigo en su
-posiciÛn, o fue atacado en el turno anterior,  el conjunto de
+Cuando el agente se encuentra en una situaci√≥n de peligro, esto es, no
+posee el rol de saboteador y hay un saboteador enemigo en su
+posici√≥n, o fue atacado en el turno anterior, el conjunto de
 creencias seteadas se reduce. 
 
-En estos casos, sÛlo son tenidos en
-cuenta  los nodos vecinos, dado que representan las vÌas de escape m·s
-r·pidas; son calculadas  las distancias a estos (en cantidad de
-turnos), y las diferencias de puntaje que producirÌa  el
+En estos casos, s√≥lo son tenidos en
+cuenta los nodos vecinos, dado que representan las v√≠as de escape m√°s
+r√°pidas; son calculadas las distancias a estos (en cantidad de
+turnos), y las diferencias de puntaje que producir√≠a el
 desplazamiento del agente. 
 
 Esto tiene el objetivo de minimizar la
-cantidad de deseos  considerados: sÛlo son evaluadas la posibilidad de
-permanecer en la misma ubicaciÛn  (si el beneficio en puntaje es
-considerable), y las distintas alternativas de defensa  propia que
+cantidad de deseos considerados: s√≥lo son evaluadas la posibilidad de
+permanecer en la misma ubicaci√≥n (si el beneficio en puntaje es
+considerable), y las distintas alternativas de defensa propia que
 pueden llevar al agente a superar el peligro.
 
 
 
-\subsection{ArgumentaciÛn}
+\subsection{Argumentaci√≥n}
 \label{sec:argumentacion}
 
 
 
 Una vez finalizado el seteo de creencias, el agente procede a la
-selecciÛn de la prÛxima  intenciÛn. 
+selecci√≥n de la pr√≥xima intenci√≥n. 
 
 Para esto, se toma cada uno de los
-deseos marcados como factibles en la base  de conocimiento, y se los
+deseos marcados como factibles en la base de conocimiento, y se los
 evalua junto a una serie de ``condiciones'' particulares. 
 
 Se
-considera que existen razones para creer realizables sÛlo aquellos
-deseos que satisfacen  sus condiciones. 
+considera que existen razones para creer realizables s√≥lo aquellos
+deseos que satisfacen sus condiciones. 
 
 Para estos, se obtiene un
-valor que representa su peso, en tÈrminos del  beneficio que conllevan
+valor que representa su peso, en t√©rminos del beneficio que conllevan
 para el equipo. 
 
 El deseo que presenta el mayor peso entre los
 analizados, se convierte en la nueva meta del agente, la cual es
-almacenada hasta ser  alcanzada o reemplazada.
+almacenada hasta ser alcanzada o reemplazada.
 
 
 
-Tanto la evaluaciÛn como el pesaje de los deseos, son llevados a cabo
-empleando \textit{argumentaciÛn}  en un mÛdulo especial, implementado
+Tanto la evaluaci√≥n como el pesaje de los deseos, son llevados a cabo
+empleando \textit{argumentaci√≥n} en un m√≥dulo especial, implementado
 con la ayuda de \textit{DeLP}.
 
 
 
-\subsection{PlanificaciÛn}
+\subsection{Planificaci√≥n}
 \label{sec:planificacion}
 
 
 
-La planificaciÛn consiste en obtener la secuencia de acciones que
-llevan al cumplimiento  de la intenciÛn propuesta. 
+La planificaci√≥n consiste en obtener la secuencia de acciones que
+llevan al cumplimiento de la intenci√≥n propuesta. 
 
-Esta lista est·
-compuesta por las acciones que le permiten al  agente posicionarse en
-el nodo deseado, y, en algunos casos, una acciÛn concreta a realizar.
+Esta lista est√°
+compuesta por las acciones que le permiten al agente posicionarse en
+el nodo deseado, y, en algunos casos, una acci√≥n concreta a realizar.
 Como se dijo anteriormente, en la etapa de seteo de creencias, todos
-los caminos hallados  por el algoritmo de b˙squeda son almacenados.
-Dicho algoritmo fue implementado de manera  tal que los caminos no
-est·n constituidos por nodos o vÈrtices, sino por una secuencia
-optimal de acciones, que tiene en cuenta no sÛlo el nodo destino, sino
-tambiÈn los recursos  del agente, y la meta final a realizar (en caso
-de haber una acciÛn final). 
+los caminos hallados por el algoritmo de b√∫squeda son almacenados.
+Dicho algoritmo fue implementado de manera tal que los caminos no
+est√°n constituidos por nodos o v√©rtices, sino por una secuencia
+optimal de acciones, que tiene en cuenta no s√≥lo el nodo destino, sino
+tambi√©n los recursos del agente, y la meta final a realizar (en caso
+de haber una acci√≥n final). 
 
-De esta forma,  cualquiera haya sido la
-intenciÛn elegida, el agente cuenta en su base de conocimiento  con el
+De esta forma, cualquiera haya sido la
+intenci√≥n elegida, el agente cuenta en su base de conocimiento con el
 plan necesario para cumplirla. 
 
-La planificaciÛn se resume entonces a
-tomar las  acciones correspondientes, y establecerlas efectivamente
+La planificaci√≥n se resume entonces a
+tomar las acciones correspondientes, y establecerlas efectivamente
 como el plan a seguir.
 
 
 
 Alternativamente, esta etapa puede introducir ciertas acciones con el
-objetivo de optimizar  el uso del turno. 
+objetivo de optimizar el uso del turno. 
 
 En aquellas situaciones en
-que el agente se dispone a permanecer inactivo,  la acciÛn nula
-(\texttt{skip}) puede ser reemplazada por la acciÛn de recargar
-energÌa, si es que  esta resulta m·s productiva.
+que el agente se dispone a permanecer inactivo, la acci√≥n nula
+(\texttt{skip}) puede ser reemplazada por la acci√≥n de recargar
+energ√≠a, si es que esta resulta m√°s productiva.
 
 
 
-\subsection{EjecuciÛn}
+\subsection{Ejecuci√≥n}
 \label{sec:ejecucion}
 
 
 
 Dado que el plan se encuentra almacenado de manera completa y
-ordenada, la ejecuciÛn se  realiza en forma directa. 
+ordenada, la ejecuci√≥n se realiza en forma directa. 
 
 Se toma la
-prÛxima acciÛn, es decir, la primera acciÛn del plan  restante, y se
-la retorna al mÛdulo principal del programa. 
+pr√≥xima acci√≥n, es decir, la primera acci√≥n del plan restante, y se
+la retorna al m√≥dulo principal del programa. 
 
-…ste se encarga
-posteriormente  de enviarla al entorno, para que se convierta
-finalmente en la siguiente acciÛn realizada  por el agente.
+√âste se encarga
+posteriormente de enviarla al entorno, para que se convierta
+finalmente en la siguiente acci√≥n realizada por el agente.
 
 
 
-\subsection{CondiciÛn de corte}
+\subsection{Condici√≥n de corte}
 \label{sec:condicion_de_corte}
 
 
 
 Existen situaciones en las que el paso de los turnos genera que el
-cumplimiento de una  meta se vuelva inalcanzable, innecesario,
-riesgoso, o menos productivo de lo previsto, por  lo que resulta m·s
+cumplimiento de una meta se vuelva inalcanzable, innecesario,
+riesgoso, o menos productivo de lo previsto, por lo que resulta m√°s
 beneficioso abortar el plan existente, y seleccionar una nueva
-intenciÛn. 
+intenci√≥n. 
 
- …sta es una etapa de verificaciÛn, que tiene como objetivo
-la detecciÛn de este tipo de  situaciones. 
+ √âsta es una etapa de verificaci√≥n, que tiene como objetivo
+la detecci√≥n de este tipo de situaciones. 
 
-Es ejecutada sÛlo en
-aquellos turnos en los que el agente se encuentra  siguiendo el plan
-de una intenciÛn previamente determinada.
+Es ejecutada s√≥lo en
+aquellos turnos en los que el agente se encuentra siguiendo el plan
+de una intenci√≥n previamente determinada.
 
 
 
 Cada deseo o esquema de deseo cuenta con una serie de
-\textbf{condiciones de corte}, que  son evaluadas al inicio de cada
+\textbf{condiciones de corte}, que son evaluadas al inicio de cada
 turno, en caso de existir un plan establecido. 
 
-Si se verifica  que
-alguna de estas condiciones se satisface, entonces la intenciÛn es
-descartada, y el  agente ingresa en un nuevo proceso de selecciÛn.
+Si se verifica que
+alguna de estas condiciones se satisface, entonces la intenci√≥n es
+descartada, y el agente ingresa en un nuevo proceso de selecci√≥n.
 Entre las condiciones de corte tenidas en cuenta, se encuentran:
 
 
@@ -546,56 +432,56 @@ inicio del plan.
 
 \item Que haya sido atacado o se encuentre amenazado por un enemigo.
 
-\item Que la meta haya sido alcanzada por un compaÒero de equipo.
+\item Que la meta haya sido alcanzada por un compa√±ero de equipo.
 \end{itemize}
 
-\subsection{Re-planificaciÛn}
+\subsection{Re-planificaci√≥n}
 \label{sec:replanificacion}
 
 
 
-La fase de re-planificaciÛn consiste en elaborar nuevamente el plan
-que permite alcanzar  la meta propuesta, sin modificar dicha meta.
-Este paso, como el anterior, se realiza en  los turnos en los que el
+La fase de re-planificaci√≥n consiste en elaborar nuevamente el plan
+que permite alcanzar la meta propuesta, sin modificar dicha meta.
+Este paso, como el anterior, se realiza en los turnos en los que el
 agente posee un plan pre-calculado. 
 
-Dado que en estos turnos no  es
-necesaria la obtenciÛn de una nueva intenciÛn, proceso que implica el
-mayor insumo de  tiempo, la inclusiÛn de la re-planificaciÛn no afecta
-el funcionamiento normal del agente,  en tÈrminos de tiempo de
-ejecuciÛn.
+Dado que en estos turnos no es
+necesaria la obtenci√≥n de una nueva intenci√≥n, proceso que implica el
+mayor insumo de tiempo, la inclusi√≥n de la re-planificaci√≥n no afecta
+el funcionamiento normal del agente, en t√©rminos de tiempo de
+ejecuci√≥n.
 
 
 
-Por el contrario, existe una mejora en el desempeÒo del equipo,
-surgida de un mejor  aprovechamiento de la informaciÛn percibida. 
+Por el contrario, existe una mejora en el desempe√±o del equipo,
+surgida de un mejor aprovechamiento de la informaci√≥n percibida. 
 
 Los
-agentes actualizan su informaciÛn sobre  el estado del mundo en cada
+agentes actualizan su informaci√≥n sobre el estado del mundo en cada
 turno. 
 
-Datos como el estado en que se hallan los recursos del  agente,
-la incorporaciÛn de nodos y arcos hasta el momento desconocidos, o las
-nuevas  ubicaciones de los otros agentes, permiten elaborar planes m·s
-precisos y ajustados a la  realidad que los originalmente diseÒados.
-AsÌ, los agentes son capaces de cumplir sus  metas con mayor
+Datos como el estado en que se hallan los recursos del agente,
+la incorporaci√≥n de nodos y arcos hasta el momento desconocidos, o las
+nuevas ubicaciones de los otros agentes, permiten elaborar planes m√°s
+precisos y ajustados a la realidad que los originalmente dise√±ados.
+As√≠, los agentes son capaces de cumplir sus metas con mayor
 facilidad, o abortarlas si es necesario.
 
 
 
-\subsection{CoordinaciÛn}
+\subsection{Coordinaci√≥n}
 \label{sec:coordinacion}
 
 
 
-En esta tesis proponemos agregar una ˙ltima fase a la arquitectura de
-los agentes; el propÛsito de Èsta es introducir, primero, una nueva
-etapa de comunicaciÛn en la que cada uno de los agentes informa al
-resto de los miembros del equipo la decisiÛn que ha tomado (es decir,
-cu·l es su intenciÛn actual, y la acciÛn inminente a realizar para
-intentar efectivizarla); y segundo, una etapa en la que se re-evaluar·
-la acciÛn a realizar dependiendo tanto de cu·les sean las intenciones
-y acciones de los compaÒeros de equipo, como de la fase actual del
+En esta tesis proponemos agregar una √∫ltima fase a la arquitectura de
+los agentes; el prop√≥sito de √©sta es introducir, primero, una nueva
+etapa de comunicaci√≥n en la que cada uno de los agentes informa al
+resto de los miembros del equipo la decisi√≥n que ha tomado (es decir,
+cu√°l es su intenci√≥n actual, y la acci√≥n inminente a realizar para
+intentar efectivizarla); y segundo, una etapa en la que se re-evaluar√°
+la acci√≥n a realizar dependiendo tanto de cu√°les sean las intenciones
+y acciones de los compa√±eros de equipo, como de la fase actual del
 juego y las prioridades que los agentes tengan de acuerdo a ella.
 
 
@@ -603,11 +489,11 @@ juego y las prioridades que los agentes tengan de acuerdo a ella.
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=.3]{graficos/eps/agent_architecture_expanded.eps}
-\caption{Diagrama de la arquitectura expandida.  Se agrega una etapa
-en la que los agentes comunican la decisiÛn tomada al resto de sus
-compaÒeros (utilizando, por ejemplo, un proceso similar al servidor de
-percepciones).  Las lÌneas punteadas representan el flujo de control,
-y las lÌneas contÌnuas representan el flujo de datos.}
+\caption{Diagrama de la arquitectura expandida. Se agrega una etapa
+en la que los agentes comunican la decisi√≥n tomada al resto de sus
+compa√±eros (utilizando, por ejemplo, un proceso similar al servidor de
+percepciones). Las l√≠neas punteadas representan el flujo de control,
+y las l√≠neas cont√≠nuas representan el flujo de datos.}
 \label{fig:agent_architecture_expanded}
 \end{figure}
 
@@ -615,22 +501,22 @@ y las lÌneas contÌnuas representan el flujo de datos.}
 \centering
 \includegraphics[scale=.3]{graficos/eps/agent_prolog_expanded.eps}
 \caption{Diagrama de la arquitectura interna expandida. 
-Se propone agregar una fase de coordinaciÛn, en la que, a partir de
-las decisiones tomadas por el resto de los compaÒeros, el agente re-
-eval˙a su propia acciÛn a realizar.}
+Se propone agregar una fase de coordinaci√≥n, en la que, a partir de
+las decisiones tomadas por el resto de los compa√±eros, el agente re-
+eval√∫a su propia acci√≥n a realizar.}
 \label{fig:agent_prolog_expanded}
 \end{figure}
 
 
 
-En el capÌtulo siguiente detallaremos la propuesta de re-evaluaciÛn de
+En el cap√≠tulo siguiente detallaremos la propuesta de re-evaluaci√≥n de
 las decisiones tomadas por el agente. 
 
 Es importante mencionar que esta
-fase agregada de coordinaciÛn es, al menos en las versiones
-preeliminares desarrolladas, exigente en cuanto al tiempo de cÛmputo;
+fase agregada de coordinaci√≥n es, al menos en las versiones
+preeliminares desarrolladas, exigente en cuanto al tiempo de c√≥mputo;
 debido a las limitaciones temporales impuestas para los turnos de
-juego durante la competencia MAPC 2011, este agregado fue diseÒado y
-se comenzÛ su implementaciÛn, pero al no conseguir la optimizaciÛn
+juego durante la competencia MAPC 2011, este agregado fue dise√±ado y
+se comenz√≥ su implementaci√≥n, pero al no conseguir la optimizaci√≥n
 suficiente como para que los agentes respondieran en el tiempo
-necesario, su utilizaciÛn fue dejada de lado.
+necesario, su utilizaci√≥n fue dejada de lado.

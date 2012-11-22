@@ -1,45 +1,45 @@
 \section{Modelo BDI}
 \label{sec:modelo_bdi}
 
-El \textit{modelo Creencia-Deseo-IntenciÛn}, en adelante \textit{BDI}
+El \textit{modelo Creencia-Deseo-Intenci√≥n}, en adelante \textit{BDI}
 (\textit{Belief-Desire-Intention}), es un modelo desarrollado para el
-diseÒo de agentes inteligentes, basado en una vista simplificada de la
+dise√±o de agentes inteligentes, basado en una vista simplificada de la
 inteligencia humana.
-Como se analizar· en la secciÛn \ref{sec:arquitectura_bdi}, el sistema
-presentado en este trabajo implementa una  adaptaciÛn de dicho modelo.
-Por esta razÛn, se introducen en esta secciÛn los  conceptos b·sicos
+Como se analizar√° en la secci√≥n \ref{sec:arquitectura_bdi}, el sistema
+presentado en este trabajo implementa una  adaptaci√≥n de dicho modelo.
+Por esta raz√≥n, se introducen en esta secci√≥n los  conceptos b√°sicos
 relacionados, que sirvieron de base para nuestro desarrollo.
 
 
-El modelo BDI est· dedicado al modelado formal del razonamiento
-pr·ctico, es  decir, la formalizaciÛn de las bases y explicaciones
-psicolÛgicas y filosÛficas  (provenientes principalmente de la
-filosofÌa de la mente y de la acciÛn) de los  conceptos de agente,
-acciÛn, intenciÛn, creencia, voluntad, deliberaciÛn,  razonamiento de
+El modelo BDI est√° dedicado al modelado formal del razonamiento
+pr√°ctico, es  decir, la formalizaci√≥n de las bases y explicaciones
+psicol√≥gicas y filos√≥ficas  (provenientes principalmente de la
+filosof√≠a de la mente y de la acci√≥n) de los  conceptos de agente,
+acci√≥n, intenci√≥n, creencia, voluntad, deliberaci√≥n,  razonamiento de
 medios y fines, etc.
-El razonamiento pr·ctico es incorporado  en agentes (por ejemplo, los
+El razonamiento pr√°ctico es incorporado  en agentes (por ejemplo, los
 seres humanos) capaces de perseguir y, por lo tanto,  comprometerse
-con una determinada meta factible (una acciÛn en particular)  a travÈs
-de una cuidadosa planificaciÛn de los medios, de las condiciones
+con una determinada meta factible (una acci√≥n en particular)  a trav√©s
+de una cuidadosa planificaci√≥n de los medios, de las condiciones
 previas  y las acciones que conducen a ese objetivo.
 
 
-Estos conceptos son incorporados al modelo mediante la implementaciÛn
-de los  aspectos principales de la teorÌa del razonamiento pr·ctico
-humano de Michael Bratman (tambiÈn referido como Belief-Desire-
+Estos conceptos son incorporados al modelo mediante la implementaci√≥n
+de los  aspectos principales de la teor√≠a del razonamiento pr√°ctico
+humano de Michael Bratman (tambi√©n referido como Belief-Desire-
 Intention, o BDI).
 Es decir, implementa  las nociones de creencia, deseo y (en
-particular) intenciÛn, de una manera inspirada  por Bratman.
-Una discusiÛn m·s extensa puede ser encontrada en el mencionado
+particular) intenci√≥n, de una manera inspirada  por Bratman.
+Una discusi√≥n m√°s extensa puede ser encontrada en el mencionado
 trabajo de Bratman\cite{brat99} y Searle\cite{searle1985}.
 
 
-Este basamento teÛrico permite al modelo resolver un problema
-particular que  se presenta en la programaciÛn de agentes.
+Este basamento te√≥rico permite al modelo resolver un problema
+particular que  se presenta en la programaci√≥n de agentes.
 Provee un mecanismo para separar la  actividad de seleccionar un plan
-de la ejecuciÛn de los planes actualmente activos.
+de la ejecuci√≥n de los planes actualmente activos.
 Los agentes BDI son capaces de balancear el tiempo invertido en
-deliberar sobre los planes (elegir quÈ hacer) y ejecutar estos planes
+deliberar sobre los planes (elegir qu√© hacer) y ejecutar estos planes
 (llevarlo a cabo).
 La actividad  de crear los planes en primera instancia, escapa al
 alcance del modelo.
@@ -53,12 +53,12 @@ alcance del modelo.
 Las \textit{creencias, deseos e intenciones} son consideradas estados
 mentales  intencionales (de forma opuesta a, por ejemplo, el dolor o
 el placer).
-Las \textit{creencias}  describen la percepciÛn de la realidad a
-travÈs de datos provenientes de  los sentidos.
+Las \textit{creencias}  describen la percepci√≥n de la realidad a
+trav√©s de datos provenientes de  los sentidos.
 Representan el estado \textit{informacional} del agente; comprenden el
-conocimiento (tanto de sentido com˙n como teÛrico) sobre el mundo, ya
+conocimiento (tanto de sentido com√∫n como te√≥rico) sobre el mundo, ya
 sea  externo o interno.
-Est·n sujetas a revisiÛn, lo que implica que pueden  cambiar en el
+Est√°n sujetas a revisi√≥n, lo que implica que pueden  cambiar en el
 futuro, pueden ser rechazadas o agregadas.
 
 
@@ -66,48 +66,48 @@ Los \textit{deseos} e \textit{intenciones}, pueden ser vistos como
 conceptos que  se asemejan, aunque con algunas sutiles diferencias.
 Los deseos representan el  estado \textit{motivacional} del agente;
 consisten en su voluntad de alcanzar  ciertos objetivos o situaciones.
-Entre los deseos, se distingue la nociÛn de  \textit{meta}.
+Entre los deseos, se distingue la noci√≥n de  \textit{meta}.
 Una meta es un deseo que ha sido adoptado por el agente para  ser
 perseguido activamente.
-Esta definiciÛn impone la restricciÛn de que el  conjunto de metas, o
+Esta definici√≥n impone la restricci√≥n de que el  conjunto de metas, o
 deseos activos, debe ser consistente.
 
 
-Por ˙ltimo, el concepto de intenciÛn representa el estado
+Por √∫ltimo, el concepto de intenci√≥n representa el estado
 \textit{deliberativo} del agente, lo que el agente ha elegido hacer.
 Constituyen deseos para los cuales el agente se ha comprometido.
-Es una nociÛn m·s ligado al compromiso que es  asumido, en funciÛn
+Es una noci√≥n m√°s ligado al compromiso que es  asumido, en funci√≥n
 alcanzar los estados o situaciones deseadas.
 
 
-\subsection{DeliberaciÛn y planificaciÛn}
+\subsection{Deliberaci√≥n y planificaci√≥n}
 \label{sec:deliberacion_planificacion}
 
 
-Por \textit{deliberaciÛn} entendemos lo que la literatura denomina
-\textit{silogismo pr·ctico}, es decir, la inferencia de una intenciÛn
+Por \textit{deliberaci√≥n} entendemos lo que la literatura denomina
+\textit{silogismo pr√°ctico}, es decir, la inferencia de una intenci√≥n
 a partir de un conjunto de creencias y deseos.
-Esto es, la selecciÛn de un deseo factible.
-Una \textit{decisiÛn}  consiste en el ˙ltimo paso de este proceso de
+Esto es, la selecci√≥n de un deseo factible.
+Una \textit{decisi√≥n}  consiste en el √∫ltimo paso de este proceso de
 inferencia mediante el cual  resulta electo uno de muchos deseos y
 potenciales intenciones.
-Es, por esto, un concepto ligado directamente al de intenciÛn.
-Definir una intenciÛn implica, en  tÈrminos de agentes implementados,
-comenzar la ejecuciÛn de un \textit{plan}.
+Es, por esto, un concepto ligado directamente al de intenci√≥n.
+Definir una intenci√≥n implica, en  t√©rminos de agentes implementados,
+comenzar la ejecuci√≥n de un \textit{plan}.
 
 
-Una \textit{acciÛn} puede ser definida, intuitivamente, como la
-ejecuciÛn de una operaciÛn que causa un determinado efecto o
-consecuencia sobre el entorno en el cual se est· desempeÒando el
+Una \textit{acci√≥n} puede ser definida, intuitivamente, como la
+ejecuci√≥n de una operaci√≥n que causa un determinado efecto o
+consecuencia sobre el entorno en el cual se est√° desempe√±ando el
 agente.
-La \textit{planificaciÛn} consiste  en la disposiciÛn de una secuencia
-de acciones con el fin de lograr una (o m·s) de sus intenciones de
+La \textit{planificaci√≥n} consiste  en la disposici√≥n de una secuencia
+de acciones con el fin de lograr una (o m√°s) de sus intenciones de
 alcanzar una meta.
-Los planes pueden ser complejos en mayor o menor medida, en funciÛn a
+Los planes pueden ser complejos en mayor o menor medida, en funci√≥n a
 la cantidad de acciones que contiene.
 En  particular, los planes pueden contener otros planes, dado que
-satisfacer una meta puede requerir la satisfacciÛn de metas
+satisfacer una meta puede requerir la satisfacci√≥n de metas
 intermedias.
 Esto refleja que en  el modelo de Bratman, inicialmente los planes son
-concebidos sÛlo parcialmente,  y los detalles son incorporados a
-medida que progresa su ejecuciÛn.
+concebidos s√≥lo parcialmente,  y los detalles son incorporados a
+medida que progresa su ejecuci√≥n.
