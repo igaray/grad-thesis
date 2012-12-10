@@ -253,41 +253,41 @@
   \label{sec:creencias_especificas}
   % Seteo de beliefs para cada deseo.
   
-%   Junto con los deseos a ser evaluados, es necesario incluir en la base
-%   de conocimiento un conjunto de creencias relacionadas a estos deseos.
-%   Entre las más importantes, se encuentran las distancias que existen
-%   desde la posición actual del agente a los distintos nodos de interés,
-%   y la diferencia de puntaje que se produce en caso que el agente se
-%   desplace a dichas ubicaciones.
-%   Estos datos resultan fundamentales, ya que afectan directamente la
-%   valuación que se realiza de cada deseo, y por lo tanto la posterior
-%   selección.
+ % Junto con los deseos a ser evaluados, es necesario incluir en la base
+ % de conocimiento un conjunto de creencias relacionadas a estos deseos.
+ % Entre las más importantes, se encuentran las distancias que existen
+ % desde la posición actual del agente a los distintos nodos de interés,
+ % y la diferencia de puntaje que se produce en caso que el agente se
+ % desplace a dichas ubicaciones.
+ % Estos datos resultan fundamentales, ya que afectan directamente la
+ % valuación que se realiza de cada deseo, y por lo tanto la posterior
+ % selección.
   
-%   En esta etapa, también se produce el seteo de datos requeridos
-%   posteriormente, como son los caminos a los diferentes nodos
-%   analizados.
-%   Los algoritmos empleados para la búsqueda de caminos almacenan todos
-%   los caminos hallados, en forma de secuencia de acciones, de manera que
-%   la etapa de planificación, ejecutada cuando se ha decidido una
-%   intención, pueda ser realizada en forma simple e directa.
+ % En esta etapa, también se produce el seteo de datos requeridos
+ % posteriormente, como son los caminos a los diferentes nodos
+ % analizados.
+ % Los algoritmos empleados para la búsqueda de caminos almacenan todos
+ % los caminos hallados, en forma de secuencia de acciones, de manera que
+ % la etapa de planificación, ejecutada cuando se ha decidido una
+ % intención, pueda ser realizada en forma simple e directa.
   
-% \subsubsection{Creencias especiales} 
-%   \label{sec:creencias_especiales}
-%   % Seteo de beliefs en caso de agente deshabilitado.
+%\subsubsection{Creencias especiales} 
+ % \label{sec:creencias_especiales}
+ % % Seteo de beliefs en caso de agente deshabilitado.
   
-%   Cuando el agente se encuentra en una situación de peligro, esto es, no
-%   posee el rol de saboteador y hay un saboteador enemigo en su posición,
-%   o fue atacado en el turno anterior, el conjunto de creencias seteadas
-%   se reduce.
-%   En estos casos, sólo son tenidos en cuenta los nodos vecinos, dado que
-%   representan las vías de escape más rápidas; son calculadas las
-%   distancias a estos (en cantidad de turnos), y las diferencias de
-%   puntaje que produciría el desplazamiento del agente.
-%   Esto tiene el objetivo de minimizar la cantidad de deseos
-%   considerados: sólo son evaluadas la posibilidad de permanecer en la
-%   misma ubicación (si el beneficio en puntaje es considerable), y las
-%   distintas alternativas de defensa propia que pueden llevar al agente a
-%   superar el peligro.
+ % Cuando el agente se encuentra en una situación de peligro, esto es, no
+ % posee el rol de saboteador y hay un saboteador enemigo en su posición,
+ % o fue atacado en el turno anterior, el conjunto de creencias seteadas
+ % se reduce.
+ % En estos casos, sólo son tenidos en cuenta los nodos vecinos, dado que
+ % representan las vías de escape más rápidas; son calculadas las
+ % distancias a estos (en cantidad de turnos), y las diferencias de
+ % puntaje que produciría el desplazamiento del agente.
+ % Esto tiene el objetivo de minimizar la cantidad de deseos
+ % considerados: sólo son evaluadas la posibilidad de permanecer en la
+ % misma ubicación (si el beneficio en puntaje es considerable), y las
+ % distintas alternativas de defensa propia que pueden llevar al agente a
+ % superar el peligro.
   
 \subsection{Argumentación}
   \label{sec:argumentacion}
@@ -312,38 +312,38 @@
 \subsection{Planificación}
   \label{sec:planificacion}
   
-%   La planificación consiste en obtener la secuencia de acciones que
-%   llevan al cumplimiento de la intención propuesta.
-%   Esta lista está compuesta por las acciones que le permiten al agente
-%   posicionarse en el nodo deseado, y, en algunos casos, una acción
-%   concreta a realizar. Como se dijo anteriormente, en la etapa de seteo
-%   de creencias, todos los caminos hallados por el algoritmo de búsqueda
-%   son almacenados. Dicho algoritmo fue implementado de manera tal que
-%   los caminos no están constituidos por nodos o vértices, sino por una
-%   secuencia optimal de acciones, que tiene en cuenta no sólo el nodo
-%   destino, sino también los recursos del agente, y la meta final a
-%   realizar (en caso de haber una acción final).
-%   De esta forma, cualquiera haya sido la intención elegida, el agente
-%   cuenta en su base de conocimiento con el plan necesario para
-%   cumplirla.
-%   La planificación se resume entonces a tomar las acciones
-%   correspondientes, y establecerlas efectivamente como el plan a seguir.
+ % La planificación consiste en obtener la secuencia de acciones que
+ % llevan al cumplimiento de la intención propuesta.
+ % Esta lista está compuesta por las acciones que le permiten al agente
+ % posicionarse en el nodo deseado, y, en algunos casos, una acción
+ % concreta a realizar. Como se dijo anteriormente, en la etapa de seteo
+ % de creencias, todos los caminos hallados por el algoritmo de búsqueda
+ % son almacenados. Dicho algoritmo fue implementado de manera tal que
+ % los caminos no están constituidos por nodos o vértices, sino por una
+ % secuencia optimal de acciones, que tiene en cuenta no sólo el nodo
+ % destino, sino también los recursos del agente, y la meta final a
+ % realizar (en caso de haber una acción final).
+ % De esta forma, cualquiera haya sido la intención elegida, el agente
+ % cuenta en su base de conocimiento con el plan necesario para
+ % cumplirla.
+ % La planificación se resume entonces a tomar las acciones
+ % correspondientes, y establecerlas efectivamente como el plan a seguir.
   
-%   Alternativamente, esta etapa puede introducir ciertas acciones con el
-%   objetivo de optimizar el uso del turno.
-%   En aquellas situaciones en que el agente se dispone a permanecer
-%   inactivo, la acción nula (\texttt{skip}) puede ser reemplazada por la
-%   acción de recargar energía, si es que esta resulta más productiva.
+ % Alternativamente, esta etapa puede introducir ciertas acciones con el
+ % objetivo de optimizar el uso del turno.
+ % En aquellas situaciones en que el agente se dispone a permanecer
+ % inactivo, la acción nula (\texttt{skip}) puede ser reemplazada por la
+ % acción de recargar energía, si es que esta resulta más productiva.
   
-% \subsection{Ejecución}
-%   \label{sec:ejecucion}
+%\subsection{Ejecución}
+ % \label{sec:ejecucion}
   
-%   Dado que el plan se encuentra almacenado de manera completa y
-%   ordenada, la ejecución se realiza en forma directa.
-%   Se toma la próxima acción, es decir, la primera acción del plan
-%   restante, y se la retorna al módulo principal del programa.
-%   Éste se encarga posteriormente de enviarla al entorno, para que se
-%   convierta finalmente en la siguiente acción realizada por el agente.
+ % Dado que el plan se encuentra almacenado de manera completa y
+ % ordenada, la ejecución se realiza en forma directa.
+ % Se toma la próxima acción, es decir, la primera acción del plan
+ % restante, y se la retorna al módulo principal del programa.
+ % Éste se encarga posteriormente de enviarla al entorno, para que se
+ % convierta finalmente en la siguiente acción realizada por el agente.
   
 \subsection{Condición de corte}
   \label{sec:condicion_de_corte}
