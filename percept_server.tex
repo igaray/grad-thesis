@@ -2,33 +2,40 @@
 \chapter{Servidor de Percepciones}
 \label{chap:servidor_de_percepciones}
 
-\begin{verbatim}
-[ ] capa de conexion con el servidor massim
-[ ] formato de los mensajes percepciones/acciones
-[ ] esquema de codificacion de las percepciones para mandar al PS (estructura y cpickle)
-[ ] protocolo de comunicacion con el PS
-[ ] esquema de reconexion para agentes caidos
-[ ] algoritmo del PS
-\end{verbatim}
+ \begin{verbatim}
+ [ ] capa de conexion con el servidor massim
+ [ ] formato de los mensajes percepciones/acciones
+ [ ] esquema de codificacion de las percepciones para mandar al PS (estructura y cpickle)
+ [ ] protocolo de comunicacion con el PS
+ [ ] esquema de reconexion para agentes caidos
+ [ ] algoritmo del PS
+ \end{verbatim}
 
+%---------------------------------------------CONEXION MASSIM-SERVER-%
 \section{Conexión del Agente con el Servidor MASSim}
+\label{sec:conexion_massim}
 
-El protocolo de comunicación con el servidor MASSim especificado por 
-el enunciado del concurso MAPC define que los agentes y el servidor 
-intercambian mensajes en formato XML codificados por UTF-8, con un 
-byte nulo para indicar el final del mensaje. 
+ El protocolo de comunicación con el servidor MASSim especificado por 
+ el enunciado del concurso MAPC define que los agentes y el servidor 
+ intercambian mensajes en formato XML codificados por UTF-8, con un 
+ byte nulo para indicar el final del mensaje. 
 
+%--------------------------------------------PROTOCOLO MASSIM-SERVER-%
 \subsection{Protocolo de comunicación con el servidor MASSim}
+\label{sub:protocolo_massim}
 
-TODO
+ TODO
 
+%---------------------------------------------------FORMATO MENSAJES-%
 \subsection{Formato de mensajes}
+\label{sub:formato_mensajes}
 
-TODO
+ TODO
 
 \subsubsection{Percepciones}
+\label{subsub:percepciones}
 
-TODO
+ TODO
 
 \subsubsection{Acciones}
 
@@ -69,20 +76,30 @@ TODO
   \item \tt{recharge}
   \item \tt{buy}
   \end{itemize}
+\label{subsub:acciones}
 
+ TODO
+
+%--------------------------------------------CONEXION PERCEPT-SERVER-%
 \section{Conexión del Agente con el Servidor de Percepciones}
+\label{sec:conexion}
 
-TODO
+ TODO
 
+%---------------------------------------------------FORMATO PERCEPTS-%
 \section{Formato de Percepciones}
+\label{sec:formato_percepciones}
 
-TODO
+ TODO
 
+%-------------------------------------------PROTOCOLO PERCEPT-SERVER-%
 \section{Protocolo de Comunicación con el Servidor de Percepciones}
+\label{sec:protocolo_perceptserver}
 
-TODO
+ TODO
 
-\section{Esquema de Codificación}
+\subsection{Esquema de Codificación}
+\label{sub:esquema_codificacion}
 
  Tras la recepción de la percepción del servidor, el parseo del XML y
  su transformación en diccionarios nativos de Python, el agente
@@ -97,9 +114,10 @@ TODO
  Se transforma el diccionario que contiene la percepción en una 
  estructura sobre la cual se pueden realizar operaciones de conjunto de 
  manera eficiente. 
- 
-TODO
+
+ TODO
 
 \subsection{Esquema de Reconexión para Agentes Caidos}
-
-Si el agente pierde la conexión, o 
+\label{sub:esquema_reconexion}
+ 
+ Si el agente pierde la conexión, 

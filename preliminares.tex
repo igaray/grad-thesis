@@ -1,15 +1,16 @@
-% Contexto de la tesis (background formal, y contexto del desarrollo
 
 \chapter{Definiciones preliminares} 
 \label{chap:definiciones_preliminares}
 
-En este capítulo se revisarán algunas definiciones de conceptos
-técnicos, para posteriormente utilizarlos sin ambigüedad durante el
-resto de la presentación.
+ % Contexto de la tesis (background formal, y contexto del desarrollo
 
-%-AGENT--------------------------------------------------------------%
+ En este capítulo se revisarán algunas definiciones de conceptos
+ técnicos, para posteriormente utilizarlos sin ambigüedad durante el
+ resto de la presentación.
+
+%--------------------------------------------------------------AGENT-%
 \section{Agente inteligente}
- \label{sec:agente_inteligente}
+\label{sec:agente_inteligente}
  
  % Un agente es una entidad computacional autónoma, que puede percibir su
  % entorno a través de sensores, y actuar en dicho entorno utilizando
@@ -30,9 +31,9 @@ resto de la presentación.
  % En la mayoría de los casos, los agentes no existen por sí solos, sino
  % que participan de un Sistema Multi-Agente (SMA).
 
-%-MAS----------------------------------------------------------------%
+%----------------------------------------------------------------MAS-%
 \section{Sistema Multi-Agente}
- \label{sec:sistema_multiagente}
+\label{sec:sistema_multiagente}
  
  % En un Sistema Multi-Agente (SMA) mas de un agente interactúan para
  % lograr un objetivo o realizar una tarea común.
@@ -49,9 +50,9 @@ resto de la presentación.
  % Los diálogos con otros agentes del mismo ambiente son, actualmente, un
  % área de estudio intensivo.
 
-%-BDI----------------------------------------------------------------%
+%----------------------------------------------------------------BDI-%
 \section{Modelo BDI}
- \label{sec:modelo_bdi}
+\label{sec:modelo_bdi}
  
  % El \textit{modelo Creencia-Deseo-Intención}, en adelante \textit{BDI}
  % (\textit{Belief-Desire-Intention}), es un modelo desarrollado para el
@@ -97,7 +98,7 @@ resto de la presentación.
  % alcance del modelo.
 
 \subsection{Creencias, Deseos e Intenciones}
- \label{sec:creencia_deseos_intenciones}
+\label{sub:creencia_deseos_intenciones}
  
  % Las \textit{creencias, deseos e intenciones} son consideradas estados
  % mentales  intencionales (de forma opuesta a, por ejemplo, el dolor o
@@ -129,7 +130,7 @@ resto de la presentación.
  % alcanzar los estados o situaciones deseadas.
 
 \subsection{Deliberación y planificación}
- \label{sec:deliberacion_planificacion}
+\label{sub:deliberacion_planificacion}
  
  % Por \textit{deliberación} entendemos lo que la literatura denomina
  % \textit{silogismo práctico}, es decir, la inferencia de una intención
@@ -158,10 +159,9 @@ resto de la presentación.
  % concebidos sólo parcialmente,  y los detalles son incorporados a
  % medida que progresa su ejecución.
 
-
-%-DELP---------------------------------------------------------------%
+%---------------------------------------------------------------DELP-%
 \section{Programación Lógica Rebatible}
- \label{sec:programacion_logica_rebatible}
+\label{sec:programacion_logica_rebatible}
  
  % A continuación introducimos las definiciones básicas necesarias para
  % representar conocimiento en Programación Lógica Rebatible (\DLP). Para
@@ -209,7 +209,7 @@ resto de la presentación.
  % \DLP\ \PP.
 
 \subsection{Argumento, Contraargumento y Derrota}
- \label{sec:argumento_contraargumento_derrota}
+\label{sec:argumento_contraargumento_derrota}
  
  % Dado un programa \DLP\ \PP\ = \SD\, resolver consultas resulta en la
  % construcción de \textit{argumentos}. Un argumento \ArgA\ es un
@@ -342,7 +342,7 @@ resto de la presentación.
  % sistema que se presenta en los capítulos siguientes.
 
 \subsection{Cómputo de garantías a través de análisis dialéctico}
- \label{sec:computo_garantias}
+\label{sec:computo_garantias}
  
  % Dado un argumento \AQ, pueden existir diferentes derrotadores $\BaQa$
  % $\ldots$ $\BkQk$, k $\ge$ 0 para \AQ. Si el argumento \AQ\ es
@@ -407,10 +407,9 @@ resto de la presentación.
  
  % \end{enumerate}
 
-
-%-MAPC---------------------------------------------------------------%
+%---------------------------------------------------------------MAPC-%
 \section{Multi-Agent Programming Contest}
- \label{sec:mapc}
+\label{sec:mapc}
 
  % El \textit{Multi-Agent Programming Contest} es un concurso de
  % programación de Inteligencia Artificial iniciado en el año 2005 con el
@@ -422,7 +421,7 @@ resto de la presentación.
  % herramientas de programación para Sistemas Multi-Agente.
 
 \subsection{Escenario MAPC 2011}
- \label{sec:escenario_mapc}
+\label{sub:escenario_mapc}
 
  % El escenario del año 2011 está formado por el mapa de un planeta
  % representado mediante un grafo.
@@ -439,7 +438,7 @@ resto de la presentación.
  % \textit{Salud}, \textit{Fuerza} y \textit{Rango de Visión}).
 
 \subsubsection{Puntaje}
- \label{sec:puntaje}
+\label{subsub:puntaje}
 
  % La simulación del juego se desarrolla por pasos, y en cada paso se
  % otorga a los equipos una determinada cantidad de puntos según el
@@ -461,7 +460,7 @@ resto de la presentación.
  % equipo.
 
 \subsubsection{Acciones}
- \label{sec:acciones}
+\label{subsub:acciones}
 
  % Todos los agentes tienen acciones en común que pueden realizar en cada
  % uno de los pasos de la simulación:
@@ -527,4 +526,3 @@ resto de la presentación.
  % equipo X (volviendo a habilitarlo, en caso de que su Salud fuera 0).
  
  % \end{itemize}
-
