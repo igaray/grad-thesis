@@ -1,54 +1,69 @@
 \chapter{Introducción}
 \label{chap:introduccion}
 
+\begin{quote}
+\scriptsize{
+    \emph{
+        If your thesis is utterly vacuous   \\
+        Use first-order predicate calculus  \\
+            With sufficient formality       \\
+            The sheerest banality           \\
+        Will be hailed by the critics:      \\
+            ``Miraculous''                  \\
+        }
+    - Henry Kautz
+}
+\end{quote}
+
 \section{Enunciado}
-\label{sec:enunciado}
+  \label{sec:enunciado}
 
-El objetivo de este trabajo es presentar en detalle el sistema de
-comunicación de percepciones entre agentes utilizado en el sistema
-multi-agente desarrollado en el marco de MAPC 2011\footnote{Multi-
-Agent Programming Contest 2011 - http://www.multiagentcontest.org/},
-la representación de la base de conocimiento utilizada, las decisiones
-de diseño e implementación tomadas, aspectos exitosos y las
-posibilidades de mejora.
-
-En esta instancia de la competencia se hizo énfasis en lograr un
-Sistema Multi-Agente puramente distribuido en el cual cada agente
-realiza un proceso de toma de decisiones independiente en lugar de
-contar con una inteligencia centralizada que decide cuál será la
-acción a realizar para cada uno de los agentes. 
-
-Para asegurar que las decisiones de cada agente sean lo mas informadas
-posibles, se desarrolló un sistema de sincronización de la base de
-conocimiento que opera en una fase previa al proceso deliberativo de
-cada agente, asegurando que todos los agentes sepan lo mismo sobre el
-estado actual del mundo.
-
-El objetivo particular de este proyecto es la aplicación de
-Argumentación para la implementación de diálogos entre agentes
-inmersos en un escenario con objetivos determinados.
-Puntualmente, se enfocará la investigación a la plataforma propuesta
-en el Multi-Agent Programming Contest, un juego académico donde
-agentes independientes compiten por diferentes objetivos.
-Sin embargo, el desarrollo de herramientas para implementar tales
-formalismos se encuentra en progreso y a un paso más lento.
-Además, muchas de las herramientas disponibles carecen de una base
-formal y suelen ser simplemente un entorno de desarrollo amigable.
+  El objetivo de este trabajo es presentar en detalle el sistema de
+  comunicación de percepciones entre agentes utilizado en el sistema
+  multi-agente desarrollado en el marco de MAPC 2011\footnote{Multi-
+  Agent Programming Contest 2011 - http://www.multiagentcontest.org/},
+  la representación de la base de conocimiento utilizada, las decisiones
+  de diseño e implementación tomadas, aspectos exitosos y las
+  posibilidades de mejora.
+  
+  En esta instancia de la competencia se hizo énfasis en lograr un
+  Sistema Multi-Agente puramente distribuido en el cual cada agente
+  realiza un proceso de toma de decisiones independiente en lugar de
+  contar con una inteligencia centralizada que decide cuál será la
+  acción a realizar para cada uno de los agentes. 
+  
+  Para asegurar que las decisiones de cada agente sean lo mas informadas
+  posibles, se desarrolló un sistema de sincronización de la base de
+  conocimiento que opera en una fase previa al proceso deliberativo de
+  cada agente, asegurando que todos los agentes sepan lo mismo sobre el
+  estado actual del mundo.
+  
+  El objetivo particular de este proyecto es la aplicación de
+  Argumentación para la implementación de diálogos entre agentes
+  inmersos en un escenario con objetivos determinados.
+  Puntualmente, se enfocará la investigación a la plataforma propuesta
+  en el Multi-Agent Programming Contest, un juego académico donde
+  agentes independientes compiten por diferentes objetivos.
+  Sin embargo, el desarrollo de herramientas para implementar tales
+  formalismos se encuentra en progreso y a un paso más lento.
+  Además, muchas de las herramientas disponibles carecen de una base
+  formal y suelen ser simplemente un entorno de desarrollo amigable.
 
 \section{Organización del trabajo}
-\label{sec:organizacion_del_trabajo}
-
-El capítulo \ref{chap:definiciones_preliminares} da un conjunto de
-definiciones y un marco teórico sobre el cual se trabajó, abarcando
-los conceptos de agentes, arquitectura BDI, programacion lógica
-rebatible, y el contexto de desarrollo
-
-El capítulo \ref{chap:arquitectura} describe la arquitectura general e
-interna de cada agente, incluyendo la entrada y salida de datos, las
-fases de preprocesamiento de las percepciones, el esquema de
-representacion de conocimiento utilizada y el proceso deliberativo
-realizado por cada agente.
-
-El capítulo \ref{chap:servidor_de_percepciones} describe en detalle el
-sistema de sincronizacion de la base de conocimientos de cada agente,
-su funcionamiento interno, capacidades y limitaciones.
+  \label{sec:organizacion_del_trabajo}
+  
+  El capítulo \ref{chap:definiciones_preliminares} da un conjunto de
+  definiciones y un marco teórico sobre el cual se trabajó, abarcando
+  los conceptos de agentes, arquitectura BDI, programacion lógica
+  rebatible, y el contexto de desarrollo
+  
+  El capítulo \ref{chap:arquitectura} describe la arquitectura general e
+  interna de cada agente, incluyendo la entrada y salida de datos, las
+  fases de preprocesamiento de las percepciones, el esquema de
+  representacion de conocimiento utilizada y el proceso deliberativo
+  realizado por cada agente.
+  
+  El capítulo \ref{chap:servidor_de_percepciones} describe en detalle el
+  sistema de sincronizacion de la base de conocimientos de cada agente,
+  su funcionamiento interno, capacidades y limitaciones.
+  

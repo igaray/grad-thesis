@@ -1,4 +1,5 @@
-\documentclass[12pt,twoside]{tesis}
+\documentclass[10pt]{report}
+%\documentclass[12pt,twoside]{tesis}
 % Formato Latex para Tesis de Doctorado Universidad Nacional del Sur, (c) 2000 Alejandro J. García
 % Solamente se sabe lo que significa escribir una tesis, cuando se ha terminado de escribir una.
 % Espero que estos archivos sean de utilidad y ahorren bastante tiempo al que lo use. Ale.
@@ -32,11 +33,11 @@
 
 \pagestyle{empty}
 
-%\input{titulo}   
-%\clearemptydoublepage
+\input{titulo}   
+\clearemptydoublepage
 
-%\input{prefacio} 
-%\clearemptydoublepage
+\input{prefacio} 
+\clearemptydoublepage
 
 %\input{agradecimientos} 
 %\clearemptydoublepage
@@ -51,14 +52,14 @@
 \pagenumbering{arabic} 
 \setcounter{page}{1}
 
-%\input{introduccion} 
-%\clearemptydoublepage
+\input{introduccion} 
+\clearemptydoublepage
 
-%\input{definiciones} 
-%\input{preliminares_bdi.tex}
-%\input{preliminares_delp.tex}
-%\input{preliminares_mapc.tex}
-%\clearemptydoublepage
+\input{preliminares} 
+\input{preliminares_bdi.tex}
+\input{preliminares_delp.tex}
+\input{preliminares_mapc.tex}
+\clearemptydoublepage
 
 \input{arquitectura} 
 \clearemptydoublepage

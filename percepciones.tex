@@ -2,26 +2,104 @@
 \chapter{Servidor de Percepciones}
 \label{chap:servidor_de_percepciones}
 
+\begin{verbatim}
+[ ] capa de conexion con el servidor massim
+[ ] formato de los mensajes percepciones/acciones
+[ ] esquema de codificacion de las percepciones para mandar al PS (estructura y cpickle)
+[ ] protocolo de comunicacion con el PS
+[ ] esquema de reconexion para agentes caidos
+[ ] algoritmo del PS
+\end{verbatim}
+
 \section{Conexión del Agente con el Servidor MASSim}
+
+El protocolo de comunicación con el servidor MASSim especificado por 
+el enunciado del concurso MAPC define que los agentes y el servidor 
+intercambian mensajes en formato XML codificados por UTF-8, con un 
+byte nulo para indicar el final del mensaje. 
+
+\subsection{Protocolo de comunicación con el servidor MASSim}
+
+TODO
+
+\subsection{Formato de mensajes}
+
+TODO
+
+\subsubsection{Percepciones}
+
+TODO
+
+\subsubsection{Acciones}
+
+  Las acciones se representan con la cadena de caracteres:
+  
+  \begin{verbatim}
+  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <message type="action">
+      <action id=\"ID\" type=\"TYPE\"/>
+    </message>\0
+  \end{verbatim}
+  
+  En el caso de las acciones que requieren un parámetro adicional, la
+  representación es:
+  
+  \begin{verbatim}
+  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <message type="action">
+      <action id="ID" param="PARAM" type="TYPE"/>
+    </message>\0
+  \end{verbatim}
+  
+  donde {\tt ID} es el identificador de mensaje enviado por el servidor
+  MASSim en la percepcion, {\tt TYPE} es el tipo de accion y {\tt PARAM}
+  es el parametro. 
+  
+  {\tt TYPE} puede ser uno de:
+  
+  \begin{itemize}
+  \item \tt{skip}
+  \item \tt{goto}
+  \item \tt{attack}
+  \item \tt{parry}
+  \item \tt{probe}
+  \item \tt{survey}
+  \item \tt{inspect}
+  \item \tt{repair}
+  \item \tt{recharge}
+  \item \tt{buy}
+  \end{itemize}
 
 \section{Conexión del Agente con el Servidor de Percepciones}
 
+TODO
+
 \section{Formato de Percepciones}
 
-\section{Esquema de Codificación}
+TODO
 
 \section{Protocolo de Comunicación con el Servidor de Percepciones}
 
+TODO
+
+\section{Esquema de Codificación}
+
+Tras la recepción de la percepción del servidor, el parseo del XML y
+su transformación en diccionarios nativos de Python, el agente
+retransmite la informacion recibida al servidor de percepciones.
+Aunque es factible enviar la percepcón en formato XML o como la
+representación de la estructura de datos en memoria del agente, unos
+de los objetivos es distribuir tanto como posible el trabajo realizado
+por el sistema.
+Como las tareas principales realizadas por el servidor de percepciones 
+son la union de la información y la diferencia de cada percepción 
+individual con el total, se implemento un esquema más de codificacion. 
+Se transforma el diccionario que contiene la percepción en una 
+estructura sobre la cual se pueden realizar operaciones de conjunto de 
+manera eficiente. 
+ 
+TODO
+
 \subsection{Esquema de Reconexión para Agentes Caidos}
 
-\section{Arquitectura del Servidor de Percepciones}
-
-\begin{verbatim}
-- capa de conexion con el servidor massim
-- formato de las percepciones
-- esquema de codificacion de las percepciones para mandar al PS
-    (estructura y cpickle) 
-- protocolo de comunicacion con el PS
-- arquitectura del PS
-- esquema de reconexion para agentes caidos
-\end{verbatim}
+Si el agente pierde la conexión, o 
