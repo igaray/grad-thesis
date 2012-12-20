@@ -2,86 +2,64 @@
 \chapter{Servidor de Percepciones}
 \label{chap:servidor_de_percepciones}
 
- \begin{verbatim}
- [ ] capa de conexion con el servidor massim
- [ ] formato de los mensajes percepciones/acciones
- [ ] esquema de codificacion de las percepciones para mandar al PS (estructura y cpickle)
- [ ] protocolo de comunicacion con el PS
- [ ] esquema de reconexion para agentes caidos
- [ ] algoritmo del PS
- \end{verbatim}
+    The PS maintains a connection for each agent.  The connection handling
+    methods encode the associate array into a form suitable for conversion into
+    a set datastructure, which is then sent over the network.  On each
+    iteration, the PS waits for each agent's data, performs a union of all data
+    sets, and returns to each agent the set difference between the data the
+    agent sent and the total union.  Figures \ref{fig:pythonperceptpublic} and
+    \ref{fig:pythonperceptprivate} show example percepts after parsing, before
+    being sent to the percept server.
 
-%---------------------------------------------CONEXION MASSIM-SERVER-%
-\section{Conexión del Agente con el Servidor MASSim}
-\label{sec:conexion_massim}
+    \begin{figure}
+    \centering
+    
+    \begin{small}
+    \begin{verbatim}
+    { 'surveyed_edges' : [ ], 
+      'vis_verts'      : [ { 'name': 'vertex65',  
+                             'team': 'none' }, 
+                           ...  ],  
+      'vis_ents'       : [ { 'node':   'vertex97',  
+                             'status': 'normal', 
+                             'name':   'a6',  
+                             'team':   'A' }, 
+                             ...  ],  
+      'inspected_ents' : [ ],  
+      'vis_edges'      : [ { 'node1': 'vertex141', 
+                             'node2': 'vertex65' }, 
+                           ...  ], 
+      'position'       : [ { 'node':       'vertex141', 
+                             'vis_range':  '1', 
+                             'health':     '6', 
+                             'name':       'self', 
+                             'max_health': '6' } ], 
+      'probed_verts'   : [ ] }
+    \end{verbatim}
+    \end{small}
+    \caption{A sample public section of a percept, after parsing.}
+    \label{fig:pythonperceptpublic}
+    \end{figure}
 
- El protocolo de comunicación con el servidor MASSim especificado por 
- el enunciado del concurso MAPC define que los agentes y el servidor 
- intercambian mensajes en formato XML codificados por UTF-8, con un 
- byte nulo para indicar el final del mensaje. 
+    \begin{figure}
+   
 
-%--------------------------------------------PROTOCOLO MASSIM-SERVER-%
-\subsection{Protocolo de comunicación con el servidor MASSim}
-\label{sub:protocolo_massim}
 
- TODO
-
-%---------------------------------------------------FORMATO MENSAJES-%
-\subsection{Formato de mensajes}
-\label{sub:formato_mensajes}
-
- TODO
-
-\subsubsection{Percepciones}
-\label{subsub:percepciones}
-
- TODO
-
-\subsubsection{Acciones}
-
-  Las acciones se representan con la cadena de caracteres:
-  
-  \begin{verbatim}
-  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <message type="action">
-      <action id=\"ID\" type=\"TYPE\"/>
-    </message>\0
-  \end{verbatim}
-  
-  En el caso de las acciones que requieren un parámetro adicional, la
-  representación es:
-  
-  \begin{verbatim}
-  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <message type="action">
-      <action id="ID" param="PARAM" type="TYPE"/>
-    </message>\0
-  \end{verbatim}
-  
-  donde {\tt ID} es el identificador de mensaje enviado por el servidor
-  MASSim en la percepcion, {\tt TYPE} es el tipo de accion y {\tt PARAM}
-  es el parametro. 
-  
-  {\tt TYPE} puede ser uno de:
-  
-  \begin{itemize}
-  \item \tt{skip}
-  \item \tt{goto}
-  \item \tt{attack}
-  \item \tt{parry}
-  \item \tt{probe}
-  \item \tt{survey}
-  \item \tt{inspect}
-  \item \tt{repair}
-  \item \tt{recharge}
-  \item \tt{buy}
-  \end{itemize}
-\label{subsub:acciones}
-
- TODO
+    \begin{verbatim}
+    { 'total_time':      2000L, 'zone_score': '0',            
+      'last_step_score': '20',  'timestamp':  '1323732915832',       
+      'strength':        '0',   'energy':     '11',                  
+      'money':           '12',  'max_energy_disabled': '16',                  
+      'last_action':     'recharge', 'max_health':     '6',
+      ... }
+    \end{verbatim}
+    \caption{A sample private section of a percept.}
+    \label{fig:pythonperceptprivate}
+    \end{figure}
 
 %--------------------------------------------CONEXION PERCEPT-SERVER-%
-\section{Conexión del Agente con el Servidor de Percepciones}
+\section[Conexión con el Percept Server]
+{Conexión del Agente con el Servidor de Percepciones}
 \label{sec:conexion}
 
  TODO
@@ -93,7 +71,8 @@
  TODO
 
 %-------------------------------------------PROTOCOLO PERCEPT-SERVER-%
-\section{Protocolo de Comunicación con el Servidor de Percepciones}
+\section[Protocolo del Percept Server]
+{Protocolo de Comunicación con el Servidor de Percepciones}
 \label{sec:protocolo_perceptserver}
 
  TODO

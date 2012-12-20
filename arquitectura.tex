@@ -2,23 +2,130 @@
 \chapter{Arquitectura}
 \label{chap:Arquitectura}
 
-%--------------------------------------------------------ARQ SISTEMA-%
-\section{Arquitectura del sistema}
-\label{sec:arquitectura_sistema}
-
-%---------------------------------------------------------ARQ AGENTE-%
-\section{Arquitectura del agente}
-\label{sec:arquitectura_agente}
-
- Este capítulo tiene el objetivo de analizar el diseño y estructura que
- presenta el enfoque de agente propuesto.
-
+ % Este capítulo tiene el objetivo de analizar el diseño y estructura que
+ % presenta el enfoque de agente propuesto.
  % Primero desde un punto de vista general, para luego poner especial
  % énfasis en el módulo dedicado a la toma de decisiones, responsable
  % del manejo de las creencias, deseos e intenciones.
  % Serán presentados en detalle los componentes básicos del esquema BDI
  % aplicado, así como también las principales adaptaciones y agregados
  % realizados en esta implementación particular.
+
+%--------------------------------------------------------ARQ SISTEMA-%
+\section{Arquitectura del sistema}
+\label{sec:arquitectura_sistema}
+
+ TODO 
+
+%---------------------------------------------CONEXION MASSIM-SERVER-%
+\section[Conexión con el MASSim Server]
+{Conexión del Agente con el Servidor MASSim}
+\label{sec:conexion_massim}
+
+ El protocolo de comunicación con el servidor MASSim especificado por 
+ el enunciado del concurso MAPC define que los agentes y el servidor 
+ intercambian mensajes en formato XML codificados por UTF-8, con un 
+ byte nulo para indicar el final del mensaje. 
+
+%--------------------------------------------PROTOCOLO MASSIM-SERVER-%
+\subsection[Protocolo del MASSim Server]
+{Protocolo de comunicación con el servidor MASSim}
+\label{sub:protocolo_massim}
+
+ TODO
+
+%---------------------------------------------------FORMATO MENSAJES-%
+\subsection{Formato de mensajes}
+\label{sub:formato_mensajes}
+
+ TODO
+
+\subsubsection{Percepciones}
+\label{subsub:percepciones}
+
+ TODO
+
+\subsubsection{Acciones}
+\label{subsub:acciones}
+
+  Las acciones se representan con la cadena de caracteres:
+  
+  \begin{verbatim}
+  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <message type="action">
+      <action id=\"ID\" type=\"TYPE\"/>
+    </message>\0
+  \end{verbatim}
+  
+  En el caso de las acciones que requieren un parámetro adicional, la
+  representación es:
+  
+  \begin{verbatim}
+  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <message type="action">
+      <action id="ID" param="PARAM" type="TYPE"/>
+    </message>\0
+  \end{verbatim}
+  
+  donde {\tt ID} es el identificador de mensaje enviado por el servidor
+  MASSim en la percepcion, {\tt TYPE} es el tipo de accion y {\tt PARAM}
+  es el parametro. 
+  
+  {\tt TYPE} puede ser uno de:
+  
+  \begin{itemize}
+  \item \tt{skip}
+  \item \tt{goto}
+  \item \tt{attack}
+  \item \tt{parry}
+  \item \tt{probe}
+  \item \tt{survey}
+  \item \tt{inspect}
+  \item \tt{repair}
+  \item \tt{recharge}
+  \item \tt{buy}
+  \end{itemize}
+
+ TODO
+
+%---------------------------------------------------------ARQ AGENTE-%
+\section{Arquitectura del agente}
+\label{sec:arquitectura_agente}
+
+    %{{{
+    The agent main program is implemented in Python, and handles all
+    communication with the servers, XML parsing, processing the information in
+    the percept into a form suitable for assertion in the agent's knowledge
+    base, and generation of the XML representing the action taken which is
+    returned to the MASSim server.
+
+    Initialization consists of opening the connections to the MASSim server,
+    authenticating, opening the connection to the PS, and starting
+    the Prolog engine. The main program loop is then entered, in which messages
+    from the MASSim server are received and parsed. 
+
+    When a message of type \texttt{sim-start} is received, initial information
+    present in the message such as the agent's role and the simulation
+    parameters are asserted into the agent's knowledge base and the perceive-act
+    loop is started.
+
+    Each iteration of the perceive-act loop expects a \texttt{request-action}
+    message from the MASSim server and parses the XML into a Python dictionary.
+    Elements in the percept are divided into a ``public'' section, which is sent
+    to the PS to be shared with other team agents and a ``private''
+    section.
+
+    The agent will then send the percept to the PS and await the global percept
+    containing the remaining information perceived by the team. The global
+    percept is merged with its own, and asserted into the agent's knowledge
+    base, establishing the agent's beliefs.  Note that no information is
+    included in the percept other than what is received in the percept.
+
+    The decision making module implemented in Prolog is then queried for the
+    next action to be performed by the agent.  Once control flow returns to the
+    Python program with the determined action, the corresponding XML message is
+    generated and sent to the MASSim server. 
+    %}}}
 
 %-------------------------------------------------------------DISEÑO-%
 \subsection{Diseño general}
