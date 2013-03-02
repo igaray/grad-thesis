@@ -1,0 +1,584 @@
+\section{Preliminaries}
+
+    The \texttt{d3lp0r} system was developed in the context of the Multi-Agent
+    Programming Contest 2011 (MAPC) hosted by the Clausthal University of
+    Technology (www.tu-clausthal.de). 
+
+    The simulation scenario is represented as an undirected graph, in which 
+    nodes are valid agent locations weighted by value, and edges are valid
+    transitions weighted by cost. 
+    Agent state includes energy, health, and strength parameters. Agent percepts
+    include visible nodes, edges, and other agents. 
+    Each agent is assigned a role in the simulation (Explorer, Saboteur,
+    Repairer, Sentinel and Inspector) which determines its valid actions and
+    initial maximum values for the agent state parameters. 
+    Actions in general have an energy cost, movement action costs depend on edge
+    weights, successful attack actions decrease enemy agent's health subject to
+    a comparison of their strength attributes. Certain actions may cause further
+    information to be included in subsequent percepts. 
+
+    A match consists of several simulations, and each simulation proceeds as
+    a series of steps. In each step, each agent is provided with a percept with
+    partial information about the current simulation state and is
+    queried for its action. 
+
+    The goal is to maximize the score function each step. A team is awarded
+    points according to the value of the nodes controlled by the team, and
+    in addition certain achievements. Agents may control more nodes than 
+    those they are positioned in by forming zones, groups of nodes under the
+    influence of a team determined by a graph coloring algorithm specified in
+    the scenario description. 
+
+    The final score for a team is the sum of points over all steps; at the end
+    of the match, the team with the most points is the winner.
+
+\section{System Analysis and Design}
+
+    % COMMUNICATION STRATEGY
+    In addition to the agent processes, the system design includes an
+    independent ``percept server'', through which percepts are communicated
+    among agent team members via a broadcast mechanism running on standard
+    network sockets.  Each agent handles his own connection to the MASSim
+    server, and upon receiving its percept, retransmits it to the percept
+    server.  The percept server joins all percepts into a ``global percept'',
+    and sends each agent the set difference between its own and the global
+    percept.  The agent then enters its reasoning phase and decides which
+    action it will send back to the MASSim server.  Other than the percept
+    server mechanism, there is no communication among team agents. This design
+    was chosen for its minimal complexity.
+
+    Agents can also be configured to run in a standalone mode, in which they will
+    not use the percept server and thus have no communication with the rest of
+    the team.  Team performance drops noticeably in this case, as the actions
+    are less informed. 
+
+    % DECENTRALISED, AUTONOMY
+    Agents are completely autonomous meaning that decision-making takes place
+    individually at the agent level, with no intervention from human operators
+    or a central intelligence agency within the system, and that decisions made
+    by an agent are influenced solely by the current simulation state and the
+    results of previous steps.  
+    Despite the sharing of all percepts among the team agents in the initial
+    phase of the turn, no control variables or instructions are included. 
+    The agent architecture developed is based on the
+    BDI model \cite{Rao:1991}, and is explained in detail in further sections.
+
+    The agents' behavior can be considered proactive, given they pursue their 
+    selected intentions over time, that is, they have persistent goals. Plans 
+    for achieving intentions are recalculated and followed for the number of
+    steps requiered, unless the goal in question becomes impossible or no longer
+    relevant.
+
+    Approximately 1500 man-hours were invested in the team development.
+    Experience from a previous instance of the MAPC was shared with our teams by
+    members of the ARGONAUTS team from TU Dortmund\cite{Holzgen:2011}. Although
+    the initial plan was to run tests against other agent teams prior to the
+    competition, time constraints made this impossible.
+
+\section{Software Architecture}
+
+\subsection{Programming languages, platforms and tools}
+    %{{{
+    The agent system was implemented using Python 2.7 and SWI Prolog
+    5.10.5.  Language integration was achieved using the \textit{pyswip}\
+    library\footnote{\texttt{http://code.google.com/p/pyswip/}}, which facilitates the
+    execution of Prolog queries from Python.  The implementation of Defeasible
+    Logic Programming (DeLP) by the LIDIA \cite{Garcia:2004a} was used for the
+    deliberative process, in which desires and intentions are set.  The
+    standard Python and SWI-Prolog debugging tools were used.  DeLP includes
+    a graphical viewer for dialectical trees, allowing visualization of which
+    arguments attack others and facilitating debugging of the defeasible rules
+    employed.  These languages and platforms were well-known at the start of
+    the project, and were chosen for precisely those reasons.
+    
+    No multi-agent programming languages / platforms / frameworks were used due to 
+    a lack of familiarity on behalf of the development team. 
+    Also, integrating or extending an existing framework with queries to
+    defeasible rules was initially considered more difficult than the
+    straighforward approach taken.
+
+    Python's amenity to rapid application development and ``batteries-included 
+    philosophy'' facilitated implementing the communication layer to the MASSim 
+    server, parsing of perceptions, rapid addition of planned features and bug 
+    correction. DeLP's capability to deal with conflicting pieces of
+    information was also very helpful in order to implement the
+    decision-making module. 
+    %}}}
+
+\subsection{Implementation}
+    %{{{
+    The system was implemented as a collection of independent operating system
+    processes, the percept server (PS from here onwards) and each agent running
+    in its own address space.  The agents are started individually and
+    synchronize via the PS.  Each one handles its own connection to
+    the MASSim and percep servers, as the \textit{eismassim} package provided
+    by the contest organizers was not used to avoid the difficulty of
+    integrating yet another language and runtime (Java) with the ones being
+    used. 
+    
+    Fig. \ref{fig:prologmodule} shows the structure and flow of control and
+    information within the decision making module implemented in Prolog and
+    DeLP.
+    %}}}
+    
+\subsubsection{Agent main program.}
+    %{{{
+    The agent main program is implemented in Python, and handles all
+    communication with the servers, XML parsing, processing the information in
+    the percept into a form suitable for assertion in the agent's knowledge
+    base, and generation of the XML representing the action taken which is
+    returned to the MASSim server.
+
+    Initialization consists of opening the connections to the MASSim server,
+    authenticating, opening the connection to the PS, and starting
+    the Prolog engine. The main program loop is then entered, in which messages
+    from the MASSim server are received and parsed. 
+
+    When a message of type \texttt{sim-start} is received, initial information
+    present in the message such as the agent's role and the simulation
+    parameters are asserted into the agent's knowledge base and the perceive-act
+    loop is started.
+
+    Each iteration of the perceive-act loop expects a \texttt{request-action}
+    message from the MASSim server and parses the XML into a Python dictionary.
+    Elements in the percept are divided into a ``public'' section, which is sent
+    to the PS to be shared with other team agents and a ``private''
+    section.
+
+    The agent will then send the percept to the PS and await the global percept
+    containing the remaining information perceived by the team. The global
+    percept is merged with its own, and asserted into the agent's knowledge
+    base, establishing the agent's beliefs.  Note that no information is
+    included in the percept other than what is received in the percept.
+
+    The decision making module implemented in Prolog is then queried for the
+    next action to be performed by the agent.  Once control flow returns to the
+    Python program with the determined action, the corresponding XML message is
+    generated and sent to the MASSim server. 
+    %}}}
+
+\subsubsection{Percept Server.}
+    %{{{
+    The PS maintains a connection for each agent.  The connection handling
+    methods encode the associate array into a form suitable for conversion into
+    a set datastructure, which is then sent over the network.  On each
+    iteration, the PS waits for each agent's data, performs a union of all data
+    sets, and returns to each agent the set difference between the data the
+    agent sent and the total union.  Figures \ref{fig:pythonperceptpublic} and
+    \ref{fig:pythonperceptprivate} show example percepts after parsing, before
+    being sent to the percept server.
+
+    \begin{figure}
+    \centering
+    
+    \begin{small}
+    \begin{verbatim}
+    { 'surveyed_edges' : [ ], 
+      'vis_verts'      : [ { 'name': 'vertex65',  
+                             'team': 'none' }, 
+                           ...  ],  
+      'vis_ents'       : [ { 'node':   'vertex97',  
+                             'status': 'normal', 
+                             'name':   'a6',  
+                             'team':   'A' }, 
+                             ...  ],  
+      'inspected_ents' : [ ],  
+      'vis_edges'      : [ { 'node1': 'vertex141', 
+                             'node2': 'vertex65' }, 
+                           ...  ], 
+      'position'       : [ { 'node':       'vertex141', 
+                             'vis_range':  '1', 
+                             'health':     '6', 
+                             'name':       'self', 
+                             'max_health': '6' } ], 
+      'probed_verts'   : [ ] }
+    \end{verbatim}
+    \end{small}
+    \caption{A sample public section of a percept, after parsing.}
+    \label{fig:pythonperceptpublic}
+    \end{figure}
+
+    \begin{figure}
+   
+
+
+    \begin{verbatim}
+    { 'total_time':      2000L, 'zone_score': '0',            
+      'last_step_score': '20',  'timestamp':  '1323732915832',       
+      'strength':        '0',   'energy':     '11',                  
+      'money':           '12',  'max_energy_disabled': '16',                  
+      'last_action':     'recharge', 'max_health':     '6',
+      ... }
+    \end{verbatim}
+    \caption{A sample private section of a percept.}
+    \label{fig:pythonperceptprivate}
+    \end{figure}
+    %}}}
+
+\subsubsection{Beliefs-Desires-Intentions}
+    %{{{
+    Once the remaining information is received from the percept server, the data
+    is then asserted into the agent's knowledge base. A collection of predicates
+    queried from the main Python module are in charge of verifying that
+    information is not overwritten, and that redundant information is not
+    inserted. Most predicates which represent the state of the environment
+    include a parameter bound to the turn the information was perceived, so that
+    information can be considered ``stale'' if the difference between the
+    current turn and the turn the information was acquired is too large.
+    
+    Beliefs in the knowledge base are represented as terms, arguments to the
+    predicate \texttt{b/1}.  Desires are also represented as Prolog terms;
+    possible desires are \texttt{expansion} (increase the value of a zone),
+    \texttt{explore} (probe nodes and increase the team's knowledge of the
+    graph), \texttt{regroup} (move closer to team members),
+    \texttt{seekforrepair} (move closer to an agent with the \textit{repairer}
+    role), \texttt{selfdefense}, \texttt{parry}, \texttt{stay} (do not move),
+    \texttt{buy}, \texttt{probe}, \texttt{repair}, \texttt{attack}. The desires
+    an agent may entertain depend on the agent's role. 
+    
+    The intention is selected from the set of possible desires the agent may
+    entertain.  If the agent already has an intention stored, the \textit{cut
+    condition} checks whether it makes sense to keep trying to fulfill it. It is
+    a series of simple conditions that review the state of the world.
+
+    Then, if there is not any committed intention, or the cut condition decides
+    it is not interesting to keep it, the \textit{beliefs setting process} is
+    started. It generates the possible desires for this step, according to what
+    is stored in the knowledge base, and, for each one of them, the beliefs
+    needed.  The decision-making module is implemented in
+    DeLP \cite{Rotstein:2007} \cite{Ferretti:2008}, a defeasible logic
+    programming language that uses argumentation \cite{DBLP:conf/comma/2008}\ to
+    reason with conflicting information.  Given the set of possible desires and
+    beliefs set by the previous module, it selects the best desire, returning it
+    as the intention that the agent commits to achieve.
+
+    All the plans for all the desires were previously calculated and stored as 
+    beliefs, since the amount of steps that they take is used by the 
+    argumentation module. The \textit{planning} module selects the one 
+    corresponding to the selected intention, and stores it. Then, the 
+    execution module only gets the plan, and returns to Python the first 
+    action in it.
+    For both search algorithms, the Depth First Search and the Uniform Cost 
+    Search, we added conditions that could cut several branches, when they were 
+    expanding to unwanted nodes. This conditions were set by the caller, since 
+    they depend on the context of the problem.
+
+    For the UCS, we first used a simple stack implemented with a list, to keep 
+    track of the frontier, because of Prolog's inability to work with arrays. This 
+    would have allowed us to develop a heap data structure, to be used in a 
+    priority queue. Lately, we found a Prolog library that implemented this data 
+    structure, and the migration was pleasantly straightforward.
+
+    However, if the process flow comes from the other branch of Fig. 
+    \ref{fig:architecture} (that is, after the cut condition, the agent has an 
+    intention), the execution is not that simple. Since skipping the decision-
+    taking makes this branch insignificant in terms of time, we decided to 
+    recalculate the plan. This might help us when a better path is discovered, 
+    even though this is unlikely.
+    %}}}
+
+\subsubsection{Deliberation and DeLP.}
+    \newcommand{\drule}[2]{\mbox{$ #1\; \defleftarrow \; #2$}}
+    \newcommand{\defleftarrow}{{\raise1.5pt\hbox{\tiny\defleft}}}
+    \newcommand{\defleft}{\mbox{---\hspace{-1.5pt}\raise.05pt\hbox{$<$}}}
+    %{{{
+    In DeLP\cite{Garcia:2004a}, knowledge is represented using facts, strict rules
+    and defeasible rules. Facts and strict rules are ground literals representing
+    firm information that cannot be challenged. \textit{Defeasible Rules}
+    (d-rules) are denoted $\drule{L_0}{L_1, \ldots, L_n}$ (where $L_i$ are literals)
+    and represent tentative information. These rules may be used if nothing could
+    be posed against it. A d-rule \textit{``\drule{Head}{Body}''} expresses that
+    \textit{``reasons to believe in Body give reasons to believe in Head''}. A DeLP
+    program is a set of facts, strict rules and defeasible rules. 
+
+    {\it Strong negation} is allowed in the head of program rules, and hence, may
+    be used to represent contradictory knowledge. From such a program contradictory
+    literals could be derived, however,  the set of facts and strict rules must
+    possess certain internal coherence (it has to be non-contradictory). 
+
+    To deal with contradictory information, in DeLP, \emph{arguments} for
+    conflicting pieces of information are built and then compared to decide
+    which one prevails. The prevailing argument is a \emph{warrant} for the
+    information that it supports.  In DeLP, a query $L$ is \emph{warranted} from
+    a program if a \emph{non-defeated} argument that supports $L$ exists. %\Arg\ 
+    
+    \begin{figure}
+    \begin{small}
+    \begin{Verbatim}
+    selfDefense(1000) -<
+        myStatus(normal), canParry,
+        myPosition(Node), enemySaboteurPosition(Node).  
+
+    canParry -< myRole(repairer).  canParry -< myRole(saboteur).
+    canParry -< myRole(sentinel).  
+    ~canParry <- myEnergy(Energy), less(Energy, 2). 
+    \end{Verbatim}
+    \end{small}
+    \caption{Desire \texttt{SelfDefense}}
+    \label{fig:SelfDefense}
+    \end{figure}
+    
+    Figure \ref{fig:SelfDefense}\ is an example of our representation of the
+    possible intentions written in DeLP.  Self defense has a weight of 1000. It
+    is a high priority intention given that the average weight of the intentions
+    is around 150.  \texttt{myStatus}, \texttt{myPosition},
+    \texttt{enemySaboteurPosition}, \texttt{myRole} and \texttt{myEnergy} are
+    facts of the knowledge base. \texttt{canParry} arguments will support or
+    defeat arguments for selfdefense intention.
+    %}}}
+
+\subsection{Difficulties encountered}
+    %{{{
+    The most difficult problems were related to optimization. Much of our time was 
+    spent in reducing the complexity of our algorithms, and the times they 
+    were called.
+
+    Our initial plan was to distribute agents on several machines. Each agent runs 
+    as a separate process, and communicates with others via TCP sockets. After 
+    some experience and benchmarking, agents were run on one machine, due to 
+    For both search algorithms, the Depth First Search and the Uniform Cost 
+    Search, we added conditions that could cut several branches, when they were 
+    expanding to unwanted nodes. This conditions were set by the caller, since 
+    they depend on the context of the problem.
+
+    For the UCS, we first used a simple stack implemented with a list, to keep 
+    track of the frontier, because of Prolog's inability to work with arrays. This 
+    would have allowed us to develop a heap data structure, to be used in a 
+    priority queue. Lately, we found a Prolog library that implemented this data 
+    structure, and the migration was pleasantly straightforward.
+
+    Our initial plan was to distribute agents on several machines. After some
+    benchmarking agents were run on one machine due to performance issues.
+    Having the option to easily try both approaches was a benefit of the
+    proposed design.
+    %}}}
+
+    In total, the system consists of 1336 lines of Python, 5059 lines of Prolog
+    pertaining strictly to the agent, belief setting and auxiliary predicates, and
+    355 lines of DeLP rules, both defeasible and strict.  The DeLP interpreter
+    consists of 4494 lines of Prolog. These figures includes commentaries and blank
+    lines. 
+
+\section{Strategies, Details, and Statistics}
+
+    In this section, we will explain the main characteristics of the team's 
+    overall strategy, as well as several implementation details, such as 
+    algorithms used and agents' organization.
+
+\subsection{Strategy}
+
+    The main strategy of the team consists of detecting profitable zones from the 
+    explored nodes, and positioning the agents correctly to maintain, defend 
+    and expand the zones formed. 
+    
+    Every agent is concerned with the formation and expansion of zones, beyond
+    its role.  The decision-taking process is responsible for calculating and
+    selecting the most beneficial intention. This selection process is based on
+    the gain in terms of score, the need of the team for the execution of
+    a role-specific action, or the benefit that the agent is currently
+    contributing to the team. 
+    
+    Agents coordination is implicit, only involving the percept information and
+    in particular excluding processed beliefs and control variables. The agents
+    do not communicate intentions or plans.
+
+    Agents do not change their behavior during runtime, maintaining the same
+    strategy throughout all simulation stages. 
+
+\subsubsection{Zone conquering.}
+    
+    The exploration of the map is done gradually. Actions related to the
+    exploration (probe, survey) are weighed along with all other actions and
+    selected when considered important.  This occurs to a greater extent during
+    the initial steps of the simulations, when the team lacks knowledge of the
+    map and other actions are unnecessary. Agents make no assumptions regarding
+    the map topology.
+
+    Behavior is not primarily focused on finding new zones, but agents do
+    attempt to expand and maximize the points of the existing ones.    They
+    calculate whether they are part of a zone or not. This is achieved by
+    checking the color of the current node and whether a neighbor of it is also
+    colored by the agent team (if this is not the case, the node does not
+    increase the zone points).  If an agent is not part of any zone it tries to
+    regroup with its teammates. 
+
+    When a zone is formed and an agent is part of it, for each potentially
+    beneficial neighbor node, the agent calculates how much points the team
+    would gain if it moves, and tries to expand the zone.  If the expansion
+    intention is selected and acted upon, then a new better zone is implicitly
+    conquered.
+    
+\subsubsection{Attacking and defending.}
+    
+    Both attacking and defense of zones are implicitly implemented. 
+    Saboteurs prefer to attack enemies that are near, so if an agent of another 
+    team enters our team's zone, it will be attacked by the saboteurs in the zone.
+    This is the most likely scenario, unless the saboteur's position is so 
+    important that it decides to stay in the formation in order to keep the zone.
+
+    The same happens with enemies in their own zones. Zones are not intentionally 
+    destroyed, but any agent that is part of a zone may be attacked, affecting 
+    possibly the structure of the enemy zone.
+    
+    Agents of other roles can also implicitly defend a zone. For example, an agent 
+    can go to a node that has one agent of each team, with the purpose of coloring the 
+    contested node and defending the zone.
+
+\subsubsection{Buying.}
+
+    Agents follow a list of predefined buying actions, when the necessary amount 
+    of money is reached. This behavior follows the idea of getting some specific skill 
+    upgrades that the team considered important to achieve early in the simulations.
+    
+\subsubsection{Mental state.}
+
+    Agents have a complete and explicit mental state. It consists of a set of 
+    components, such as beliefs, desires, intentions, and plans. 
+    The belief base includes the information obtained from the perceptions, as
+    well as different kinds of beliefs required by the decision-taking module.
+    The desires are set every step that the agent decides to select a new intention.
+    The intentions and plans kept in the knowledge base are those that the agent
+    is currently carrying out.
+    
+\subsection{Agents' organization}
+
+    The decision-taking module makes use of other agents' status, but there is
+    neither negotiation nor intentions exchange, so the team performance is
+    emergent on individual behavior.  
+    
+    Referring to our actual programming, all the agents have a strong core of
+    common code, which is all the Python part, that servers as
+    a receive-percepts/send-action client of the server; the Percept Server; and
+    an important part of the Prolog code. This includes all the utilities used,
+    the implementation of the BDI architecture, the structure of the
+    decision-taking module, and a considerable part of the arguments used, that
+    are common to all the roles.
+        
+    Apart from all this, each role has a couple of separate files, that have 
+    specific code, including the arguments used in the decision-taking module, and
+    the setting of the beliefs needed for those arguments. Here is where the 
+    individual behavior is set, since the specific actions that can be done by each
+    role are taken into consideration here.
+    
+    Specific values for the decision-taking module for each role are also included
+    in these files, and this is what can make that agents of different roles act 
+    differently faced to the same situation, according to our judgement.
+       This separation is negligible, having in consideration the amount of code 
+    written for the agents, and may be near a 5\% of it. However, this has been proven to
+    be more than enough to modify considerably the behavior of the agents, thanks to
+    the non-monotonic nature of DeLP.
+
+\section{Short Answers}
+
+    The solution follows a decentralized architecture in which agents run completely
+    decoupled in different processes. Agents share no memory and decision-making
+    takes place individually, even though every agent communicates part of his
+    perception to the others.
+    
+    Percepts are communicated among agent members of the team via a broadcast
+    mechanism developed as part of the multi-agent system. This design was chosen
+    for its minimal complexity.
+    
+    Agents are completely autonomous; decision-making takes place individually at
+    the agent level, with no intervention from human operators or a central
+    intelligence agency within the system. Agents assign priorities to different
+    possible goals depending on their desires, and plan in order to achieve the most
+    valuable goal. This results in more autonomous way in which an agent acts.  The
+    agents' behavior can be considered proactive, given they pursue their selected
+    intentions over time, that is, they have persistent goals.
+    
+    \subsection{Software Architecture}
+
+    The agent system was implemented using Python 2.7 and SWI Prolog 5.10.5. DeLP,
+    a defeasible logic language, was used as a service within Prolog.
+    
+    \begin{question}
+    How have you mapped the designed architecture (both multi-agent and individual
+    agent architectures) to programming codes i.e., how did you implement specific
+    agent-oriented concepts and designed artifacts using the programming language?  
+    \end{question}
+    
+    The perception is processed by the Python program, that parses the XML. Then, it
+    sends it to the Percept Server that every step merges all perceptions, and
+    delivers them back to the agents.  The Python code asserts all the perception
+    into Prolog, then querying it for the next action to be executed.  Prolog
+    handles all the decision making, argumentation and planning, and returns the
+    action binded to a variable to Python, that then generates with it an XML to be
+    sent to the server.
+    
+    \begin{question}
+    How did you distribute the agents on several machines? And if you did not
+    please justify why.  
+    \end{question}
+    
+    Initial plans were to distribute agents on several machines. Each agents runs as
+    a separate process, and communicates with others via TCP sockets. After some
+    experience and benchmarking, agents were run on one machine due to performance
+    issues. Having the choice was a benefit of the proposed design.
+    
+    \begin{question}
+    To which extend is the reasoning of your agents synchronized with the
+    receive-percepts/send-action cycle?
+    \end{question}
+    
+    All the reasoning is done after receiving the percepts, and before sending the
+    action.
+    
+    \subsection{Strategies, Details, and Statistics}
+    
+    \begin{question}
+    What is the main strategy of your team?
+    \end{question}
+    
+    The main strategy of the team consists of detecting profitable zones from the
+    explored vertices, and positioning the agents correctly to maintain, defend and
+    expand the zones.  Every agent, beyond its role, is concerned with the formation
+    and expansion of zones.  The decision-taking process is responsible for
+    calculating and selecting the most beneficial intention, which may be focused in
+    the zone conquering (if possible), or not.
+        
+    \begin{question}
+    How does the overall team work together? (coordination, information sharing,
+    ...) 
+    \end{question}
+    
+    The agents coordinate in an implicit way. This is, the  information shared
+    consists only of the perception received, without having neither preprocessed
+    beliefs, nor control variables. The agents do not communicate their intention,
+    or plans, so any coordination that they may have has been achieved implicitly.
+    
+    \begin{question}
+    How do your agents communicate with the server?  
+    \end{question}
+    
+    Some functionality provided by the eismassim library was reimplemented in
+    a connection library in Python.
+    
+    Agents are not primarily focused on finding new zones, but they attempt to
+    expand and maximize the points of the existing ones. They calculate whether they
+    are part of a zone or not.  If an agent is not being part of any zone, it tries
+    to regroup with its teammates. When a zone is formed, and the agent is part of
+    it, for each potentially beneficial neighbor node, the agent calculates how much
+    points would the team gain if it moves, and tries to expand the zone.  This
+    estimations are done with our reimplementation of the coloring algorithm used by
+    the MASSim server.
+    
+    \begin{question}
+    How do your agents communicate? And what do they communicate?  
+    \end{question}
+    
+    Agents only communicate their perceptions via a perception server implemented in
+    Python.  On each perceive/act cycle, agents receive the percept from the MASSim
+    server, separate the information which will remain private and which will be
+    shared.  The public part of the percept is sent to the percept server, which
+    performs a union of all percept and send the difference back to each agent.
+    After receiving the joint percept, the agents enter a belief setting phase, and
+    later an argumentation phase.
+    
+    \begin{question}
+    Is most of your agents behavior emergent on an individual and team level?
+    \end{question}
+    
+    The decision-taking module makes use of other agents' status, but there is
+    neither negotiation nor intentions exchange, so the team performance is emergent
+    on an individual behavior.
