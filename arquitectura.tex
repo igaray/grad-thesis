@@ -15,12 +15,14 @@
 \section{Arquitectura del sistema}
 \label{sec:arquitectura_sistema}
 
- TODO 
+ TODO
+
+ \textbf{ROUGH DRAFT} 
 
 %---------------------------------------------CONEXION MASSIM-SERVER-%
 \section[Conexión con el MASSim Server]
-{Conexión del Agente con el Servidor MASSim}
-\label{sec:conexion_massim}
+ {Conexión del Agente con el Servidor MASSim}
+ \label{sec:conexion_massim}
 
  El protocolo de comunicación con el servidor MASSim especificado por 
  el enunciado del concurso MAPC define que los agentes y el servidor 
@@ -29,24 +31,24 @@
 
 %--------------------------------------------PROTOCOLO MASSIM-SERVER-%
 \subsection[Protocolo del MASSim Server]
-{Protocolo de comunicación con el servidor MASSim}
-\label{sub:protocolo_massim}
+ {Protocolo de comunicación con el servidor MASSim}
+ \label{sub:protocolo_massim}
 
  TODO
 
 %---------------------------------------------------FORMATO MENSAJES-%
 \subsection{Formato de mensajes}
-\label{sub:formato_mensajes}
+ \label{sub:formato_mensajes}
 
  TODO
 
 \subsubsection{Percepciones}
-\label{subsub:percepciones}
+ \label{subsub:percepciones}
 
  TODO
 
 \subsubsection{Acciones}
-\label{subsub:acciones}
+ \label{subsub:acciones}
 
   Las acciones se representan con la cadena de caracteres:
   
@@ -90,46 +92,46 @@
 
 %---------------------------------------------------------ARQ AGENTE-%
 \section{Arquitectura del agente}
-\label{sec:arquitectura_agente}
+ \label{sec:arquitectura_agente}
 
-    %{{{
-    The agent main program is implemented in Python, and handles all
-    communication with the servers, XML parsing, processing the information in
-    the percept into a form suitable for assertion in the agent's knowledge
-    base, and generation of the XML representing the action taken which is
-    returned to the MASSim server.
+ TODO
 
-    Initialization consists of opening the connections to the MASSim server,
-    authenticating, opening the connection to the PS, and starting
-    the Prolog engine. The main program loop is then entered, in which messages
-    from the MASSim server are received and parsed. 
+ The agent main program is implemented in Python, and handles all
+ communication with the servers, XML parsing, processing the information in
+ the percept into a form suitable for assertion in the agent's knowledge
+ base, and generation of the XML representing the action taken which is
+ returned to the MASSim server.
 
-    When a message of type \texttt{sim-start} is received, initial information
-    present in the message such as the agent's role and the simulation
-    parameters are asserted into the agent's knowledge base and the perceive-act
-    loop is started.
+ Initialization consists of opening the connections to the MASSim server,
+ authenticating, opening the connection to the PS, and starting
+ the Prolog engine. The main program loop is then entered, in which messages
+ from the MASSim server are received and parsed. 
 
-    Each iteration of the perceive-act loop expects a \texttt{request-action}
-    message from the MASSim server and parses the XML into a Python dictionary.
-    Elements in the percept are divided into a ``public'' section, which is sent
-    to the PS to be shared with other team agents and a ``private''
-    section.
+ When a message of type \texttt{sim-start} is received, initial information
+ present in the message such as the agent's role and the simulation
+ parameters are asserted into the agent's knowledge base and the perceive-act
+ loop is started.
 
-    The agent will then send the percept to the PS and await the global percept
-    containing the remaining information perceived by the team. The global
-    percept is merged with its own, and asserted into the agent's knowledge
-    base, establishing the agent's beliefs.  Note that no information is
-    included in the percept other than what is received in the percept.
+ Each iteration of the perceive-act loop expects a \texttt{request-action}
+ message from the MASSim server and parses the XML into a Python dictionary.
+ Elements in the percept are divided into a ``public'' section, which is sent
+ to the PS to be shared with other team agents and a ``private''
+ section.
 
-    The decision making module implemented in Prolog is then queried for the
-    next action to be performed by the agent.  Once control flow returns to the
-    Python program with the determined action, the corresponding XML message is
-    generated and sent to the MASSim server. 
-    %}}}
+ The agent will then send the percept to the PS and await the global percept
+ containing the remaining information perceived by the team. The global
+ percept is merged with its own, and asserted into the agent's knowledge
+ base, establishing the agent's beliefs.  Note that no information is
+ included in the percept other than what is received in the percept.
+
+ The decision making module implemented in Prolog is then queried for the
+ next action to be performed by the agent.  Once control flow returns to the
+ Python program with the determined action, the corresponding XML message is
+ generated and sent to the MASSim server. 
 
 %-------------------------------------------------------------DISEÑO-%
 \subsection{Diseño general}
-\label{sub:diseno_general}
+ \label{sub:diseno_general}
   
  % El programa agente presenta una estructura simple en cuanto a su
  % división más general.
@@ -144,9 +146,23 @@
  % encargado de tomar decisiones.
  % La forma en que se estructuran los componentes principales es
  % detallada a continuación.
-  
-\subsubsection{Estructura básica del agente}
-\label{subsub:estructura_basica_de_agente}
+
+ The agent starts and parses command line options that will determine its behavioral parameters.
+ Among them are the authentication details the agent uses with the MASSim server, 
+ whether loggin is enabled or not and its verbosity, 
+ the network location of the percept server 
+ and whether the agent should operate in "dummy" mode (in which it does not use argumentation in the reasonin process).
+ 
+ The agent initializes and starts its main program loop.
+ This consists of connecting to the massim server, initializing the Prolog engine, processing the simulation start message and running the perceive/act loop. 
+ The simulation start message is sent by the server whenever the agent connects.
+ In the perceive/act loop, the agent receives messages from the massim server and responds accordingly.
+ Possible messages are sim-start, request-action, sim-end and bye.
+ On each action-request, which includes the agent's percept for that turn,
+ the agent will process the percept, sending the information it wished to share with other agents to the percept server, then incorporating the percept server's response into its knowledge base, initiate the reasoning process to arrive at a decision, and send the action back to the massim server. 
+
+0 \subsubsection{Estructura básica del agente}
+ \label{subsub:estructura_basica_de_agente}
   
  % El programa principal del agente es el encargado de manejar la
  % comunicación con los servidores, tanto el del juego como el de
@@ -198,7 +214,7 @@
  % acción seleccionada es enviada al servidor del juego.
   
 \subsubsection{Base de conocimiento}
-\label{subsub:base_de_conocimiento}
+ \label{subsub:base_de_conocimiento}
   
  % Como fue mencionado, la percepción del agente en cada iteración es
  % convertida a una estructura de datos que permite, de manera más
@@ -289,7 +305,7 @@
   
 %----------------------------------------------------------------BDI-%
 \subsection{Arquitectura BDI} 
-\label{sub:arquitectura_bdi}
+ \label{sub:arquitectura_bdi}
 
  % El módulo de toma de decisiones es consultado por el programa
  % principal, obtiene la próxima acción a ser ejecutada, y la retorna
@@ -313,7 +329,7 @@
  % \end{figure}
   
 \subsubsection{Seteo de creencias}
-\label{subsub:seteo_de_creencias}
+ \label{subsub:seteo_de_creencias}
   
  % El seteo de creencias es llevado a cabo cada vez que el agente se
  % dispone a seleccionar una nueva intención.
@@ -407,7 +423,7 @@
   
 %------------------------------------------------------ARGUMENTACION-%
 \subsection{Argumentación}
-\label{sub:argumentacion}
+ \label{sub:argumentacion}
   
  % Una vez finalizado el seteo de creencias, el agente procede a la
  % selección de la próxima intención.
@@ -428,7 +444,7 @@
   
 %------------------------------------------------------PLANIFICACION-%
 \subsection{Planificación}
-\label{sub:planificacion}
+ \label{sub:planificacion}
   
  % La planificación consiste en obtener la secuencia de acciones que
  % llevan al cumplimiento de la intención propuesta.
@@ -455,7 +471,7 @@
   
 %----------------------------------------------------------EJECUCION-%
 \subsection{Ejecución}
-\label{sub:ejecucion}
+ \label{sub:ejecucion}
   
  % Dado que el plan se encuentra almacenado de manera completa y
  % ordenada, la ejecución se realiza en forma directa.
@@ -465,7 +481,7 @@
  % convierta finalmente en la siguiente acción realizada por el agente.
   
 \subsubsection{Condición de corte}
-\label{subsub:condicion_de_corte}
+ \label{subsub:condicion_de_corte}
   
  % Existen situaciones en las que el paso de los turnos genera que el
  % cumplimiento de una meta se vuelva inalcanzable, innecesario,
@@ -497,7 +513,7 @@
  % \end{itemize}
   
 \subsubsection{Re-planificación}
-\label{subsub:replanificacion}
+ \label{subsub:replanificacion}
   
  % La fase de re-planificación consiste en elaborar nuevamente el plan
  % que permite alcanzar la meta propuesta, sin modificar dicha meta. Este
@@ -518,4 +534,3 @@
  % precisos y ajustados a la realidad que los originalmente diseñados.
  % Así, los agentes son capaces de cumplir sus metas con mayor facilidad,
  % o abortarlas si es necesario.
-
