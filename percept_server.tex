@@ -2,60 +2,57 @@
 \chapter{Servidor de Percepciones}
  \label{chap:servidor_de_percepciones}
 
-    The PS maintains a connection for each agent.  The connection handling
-    methods encode the associate array into a form suitable for conversion into
-    a set datastructure, which is then sent over the network.  On each
-    iteration, the PS waits for each agent's data, performs a union of all data
-    sets, and returns to each agent the set difference between the data the
-    agent sent and the total union.  Figures \ref{fig:pythonperceptpublic} and
-    \ref{fig:pythonperceptprivate} show example percepts after parsing, before
-    being sent to the percept server.
+ El servidor de percepciones mantiene una conexíon abierta por cada agente
+ Los métodos que manejan la conexión codifican los datos secuenciales en una 
+ forma amena para operaciones sobre conjuntos, la cual es transmitida por la red.
+ En cada turno, el servidor de percepciones espera los datos del agente, 
+ realiza la union de todas las percepciones, y le devuelve a cada agente la 
+ diferencia entre la percepcion global y su percepcion. 
+ Las figuras \ref{fig:pythonperceptpublic} y \ref{fig:pythonperceptprivate}
+ muestras ejemplos de percepciones despues de ser parseadas, y antes de enviar
+ al servidor de percepciones.
 
-    \begin{figure}
-    \centering
-    
-    \begin{small}
-    \begin{verbatim}
-    { 'surveyed_edges' : [ ], 
-      'vis_verts'      : [ { 'name': 'vertex65',  
-                             'team': 'none' }, 
-                           ...  ],  
-      'vis_ents'       : [ { 'node':   'vertex97',  
-                             'status': 'normal', 
-                             'name':   'a6',  
-                             'team':   'A' }, 
-                             ...  ],  
-      'inspected_ents' : [ ],  
-      'vis_edges'      : [ { 'node1': 'vertex141', 
-                             'node2': 'vertex65' }, 
-                           ...  ], 
-      'position'       : [ { 'node':       'vertex141', 
-                             'vis_range':  '1', 
-                             'health':     '6', 
-                             'name':       'self', 
-                             'max_health': '6' } ], 
-      'probed_verts'   : [ ] }
-    \end{verbatim}
-    \end{small}
-    \caption{A sample public section of a percept, after parsing.}
-    \label{fig:pythonperceptpublic}
-    \end{figure}
-
-    \begin{figure}
-   
-
-
-    \begin{verbatim}
-    { 'total_time':      2000L, 'zone_score': '0',            
-      'last_step_score': '20',  'timestamp':  '1323732915832',       
-      'strength':        '0',   'energy':     '11',                  
-      'money':           '12',  'max_energy_disabled': '16',                  
-      'last_action':     'recharge', 'max_health':     '6',
-      ... }
-    \end{verbatim}
-    \caption{A sample private section of a percept.}
-    \label{fig:pythonperceptprivate}
-    \end{figure}
+ \begin{figure}
+ \centering
+ \begin{small}
+ \begin{verbatim}
+ { 'surveyed_edges' : [ ], 
+   'vis_verts'      : [ { 'name': 'vertex65',  
+                          'team': 'none' }, 
+                        ...  ],  
+   'vis_ents'       : [ { 'node':   'vertex97',  
+                          'status': 'normal', 
+                          'name':   'a6',  
+                          'team':   'A' }, 
+                          ...  ],  
+   'inspected_ents' : [ ],  
+   'vis_edges'      : [ { 'node1': 'vertex141', 
+                          'node2': 'vertex65' }, 
+                        ...  ], 
+   'position'       : [ { 'node':       'vertex141', 
+                          'vis_range':  '1', 
+                          'health':     '6', 
+                          'name':       'self', 
+                          'max_health': '6' } ], 
+   'probed_verts'   : [ ] }
+ \end{verbatim}
+ \end{small}
+ \caption{Una muestra de la sección pública de una percepción, despues del parseo.}
+ \label{fig:pythonperceptpublic}
+ \end{figure}
+ 
+ \begin{figure}
+ \begin{verbatim}
+ { 'total_time':      2000L, 'zone_score': '0',            
+   'last_step_score': '20',  'timestamp':  '1323732915832',       
+   'strength':        '0',   'energy':     '11',                  
+   'money':           '12',  'max_energy_disabled': '16',                  
+   'last_action':     'recharge', 'max_health':     '6',
+   ... }
+ \end{verbatim}
+ \caption{A sample private section of a percept.}
+ \label{fig:pythonperceptprivate}
+ \end{figure}
 
 %--------------------------------------------CONEXION PERCEPT-SERVER-%
 \section[Conexión con el Percept Server]

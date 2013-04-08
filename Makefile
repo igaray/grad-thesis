@@ -4,7 +4,7 @@ all:
 	#latex $(PDFTEX_OPTIONS) tesina.tex > output/log.txt
 	latex $(PDFTEX_OPTIONS) tesina.tex
 	latex $(PDFTEX_OPTIONS) tesina.tex >/dev/null
-#	dvipdf ./output/tesina.dvi ./output/tesina.pdf 
+	dvipdf ./output/tesina.dvi ./output/tesina.pdf 
 
 clean:
 	rm -f output/* 
