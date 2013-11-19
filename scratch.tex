@@ -1,0 +1,183 @@
+\subsubsection{Base de conocimiento}
+ \label{subsub:base_de_conocimiento}
+
+ % Como fue mencionado, la percepción del agente en cada iteración es
+ % convertida a una estructura de datos que permite, de manera más
+ % sencilla, manipular y compartir la información.
+ % Cuando el agente cuenta con todos los datos relativos a las
+ % percepciones del equipo, la base de conocimiento puede ser
+ % actualizada convenientemente.
+ % Una colección de predicados de Prolog consultados desde el programa
+ % principal se encarga de verificar que la información existente no
+ % resulte sobreescrita, y que información redundante no sea incorporada.
+
+ % La información que constituye conocimiento certero sobre el estado del
+ % escenario es almacenada mediante términos, que sirven como parámetros
+ % del predicado \texttt{k/1} (\textit{knowledge}).
+ % Cada uno de los datos de interés es representado mediante un término
+ % diferente.
+ % En muchos casos, esta clase de términos incluyen un parámetro ligado
+ % al número de turno en el cual el dato fue percibido.
+ % De esta forma, es posible realizar ciertos análisis, como por
+ % ejemplo, considerar obsoleta la información de una determinada
+ % antigüedad.
+
+ % \begin{verbatim}
+ %   k(equipoAgente(Agente, Equipo)).
+ %   k(valorNodo(Nodo, Valor)).
+ %   k(arco(Nodo1, Nodo2, Costo)).
+ %   k(posicionAgente(Agente, Turno, Posición)).
+ %   k(equipoNodo(Turno, Nodo, Dueño)).
+ % \end{verbatim}
+
+ % Las creencias que provienen de inferencias y cálculos realizados a
+ % partir de información ya existente también son almacenadas mediante
+ % términos, en este caso parámetros %argumentos del predicado
+ % \texttt{b/1} (\textit{beliefs}).
+
+ % Este tipo de creencias es empleado directamente por el módulo
+ % encargado de la toma de decisiones, y se mantienen vigentes sólo
+ % durante el turno en el cual fueron generadas. Es decir, que, al
+ % finalizar cada turno, son descartadas para evitar futuros problemas o
+ % inconcistencias.
+
+ % \begin{verbatim}
+ %   b(estoyEnLaFrontera).
+ %   b(posibleExplorar(Nodo)).
+ %   b(haySaboteador(Nodo)).
+ % \end{verbatim}
+
+ % Existe cierta información que es formulada de manera hipotética.
+ % Se trata de datos surgidos de suposiciones realizadas sobre posibles
+ % estados futuros del escenario, a partir de su estado actual.
+ % Este tipo de datos resulta fundamental para facilitar los cálculos
+ % realizados por los algoritmos que se encargan de buscar formas de
+ % maximizar el puntaje del equipo.
+ % Dado que no constituye información real, sino posible a futuro, se
+ % almacena mediante parámetros de un predicado especial, \texttt{h/1}
+ % (\textit{hypothetical}).
+
+ % \begin{verbatim}
+ %   h(nodoEquipo(Nodo, Dueño)).
+ %   h(posicion(Turno, Agente, Nodo)).
+ % \end{verbatim}
+
+ % Las intenciones surgen del proceso argumentativo explicado más
+ % adelante, y son representadas utilizando términos.
+ % Si la intención no posee argumentos, entonces es representada mediante
+ % un átomo.
+ % En otro caso, se emplea un functor que denota el nombre de la
+ % intención, acompañado por un argumento.
+ % Las acciones, por el contrario, son representadas a través de listas.
+ % El primer elemento de la lista es un atómo denotando el tipo de
+ % acción.
+ % El resto de la lista contiene, ocasionalmente, un término que indica
+ % el argumento de la acción, como por ejemplo el nombre de un nodo o un
+ % agente.
+ % Los planes son representados mediante listas de acciones, es decir,
+ % listas de listas.
+
+ % Contrario a lo que ocurre con las creencias, tanto las intenciones
+ % como los planes constituyen información que debe perdurar en la base
+ % de conocimiento tantos turnos como sea necesario.
+ % Para este tipo de datos se emplean hechos específicos que cuentan con
+ % un único argumento.
+
+ % \begin{verbatim}
+ %   intencion(explorar(vertex7)).
+ %   plan([[recharge], [goto, vertex7], [survey]]).
+ % \end{verbatim}
+
+%------------------------------------------------------PLANIFICACION-%
+\subsection{Planificación}
+ \label{sub:planificacion}
+
+ % La planificación consiste en obtener la secuencia de acciones que
+ % llevan al cumplimiento de la intención propuesta.
+ % Esta lista está compuesta por las acciones que le permiten al agente
+ % posicionarse en el nodo deseado, y, en algunos casos, una acción
+ % concreta a realizar. Como se dijo anteriormente, en la etapa de seteo
+ % de creencias, todos los caminos hallados por el algoritmo de búsqueda
+ % son almacenados. Dicho algoritmo fue implementado de manera tal que
+ % los caminos no están constituidos por nodos o vértices, sino por una
+ % secuencia optimal de acciones, que tiene en cuenta no sólo el nodo
+ % destino, sino también los recursos del agente, y la meta final a
+ % realizar (en caso de haber una acción final).
+ % De esta forma, cualquiera haya sido la intención elegida, el agente
+ % cuenta en su base de conocimiento con el plan necesario para
+ % cumplirla.
+ % La planificación se resume entonces a tomar las acciones
+ % correspondientes, y establecerlas efectivamente como el plan a seguir.
+
+ % Alternativamente, esta etapa puede introducir ciertas acciones con el
+ % objetivo de optimizar el uso del turno.
+ % En aquellas situaciones en que el agente se dispone a permanecer
+ % inactivo, la acción nula (\texttt{skip}) puede ser reemplazada por la
+ % acción de recargar energía, si es que esta resulta más productiva.
+
+%----------------------------------------------------------EJECUCION-%
+\subsection{Ejecución}
+ \label{sub:ejecucion}
+
+ % Dado que el plan se encuentra almacenado de manera completa y
+ % ordenada, la ejecución se realiza en forma directa.
+ % Se toma la próxima acción, es decir, la primera acción del plan
+ % restante, y se la retorna al módulo principal del programa.
+ % Éste se encarga posteriormente de enviarla al entorno, para que se
+ % convierta finalmente en la siguiente acción realizada por el agente.
+
+\subsubsection{Condición de corte}
+ \label{subsub:condicion_de_corte}
+
+ % Existen situaciones en las que el paso de los turnos genera que el
+ % cumplimiento de una meta se vuelva inalcanzable, innecesario,
+ % riesgoso, o menos productivo de lo previsto, por lo que resulta más
+ % beneficioso abortar el plan existente, y seleccionar una nueva
+ % intención.
+ % Ésta es una etapa de verificación, que tiene como objetivo la
+ % detección de este tipo de situaciones.
+ % Es ejecutada sólo en aquellos turnos en los que el agente se encuentra
+ % siguiendo el plan de una intención previamente determinada.
+
+ % Cada deseo o esquema de deseo cuenta con una serie de
+ % \textbf{condiciones de corte}, que son evaluadas al inicio de cada
+ % turno, en caso de existir un plan establecido.
+ % Si se verifica que alguna de estas condiciones se satisface, entonces
+ % la intención es descartada, y el agente ingresa en un nuevo proceso de
+ % selección. Entre las condiciones de corte tenidas en cuenta, se
+ % encuentran:
+
+ % \begin{itemize}
+ % \item Que haya pasado una determinada cantidad de turnos desde el
+ % inicio del plan.
+
+ % \item Que el agente se encuentre deshabilitado.
+
+ % \item Que haya sido atacado o se encuentre amenazado por un enemigo.
+
+ % \item Que la meta haya sido alcanzada por un compañero de equipo.
+ % \end{itemize}
+
+\subsubsection{Re-planificación}
+ \label{subsub:replanificacion}
+
+ % La fase de re-planificación consiste en elaborar nuevamente el plan
+ % que permite alcanzar la meta propuesta, sin modificar dicha meta. Este
+ % paso, como el anterior, se realiza en los turnos en los que el agente
+ % posee un plan pre-calculado.
+ % Dado que en estos turnos no es necesaria la obtención de una nueva
+ % intención, proceso que implica el mayor insumo de tiempo, la inclusión
+ % de la re-planificación no afecta el funcionamiento normal del agente,
+ % en términos de tiempo de ejecución.
+
+ % Por el contrario, existe una mejora en el desempeño del equipo,
+ % surgida de un mejor aprovechamiento de la información percibida.
+ % Los agentes actualizan su información sobre el estado del mundo en
+ % cada turno.
+ % Datos como el estado en que se hallan los recursos del agente, la
+ % incorporación de nodos y arcos hasta el momento desconocidos, o las
+ % nuevas ubicaciones de los otros agentes, permiten elaborar planes más
+ % precisos y ajustados a la realidad que los originalmente diseñados.
+ % Así, los agentes son capaces de cumplir sus metas con mayor facilidad,
+ % o abortarlas si es necesario.
+
